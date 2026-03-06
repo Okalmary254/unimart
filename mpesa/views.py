@@ -1,6 +1,3 @@
-"""
-M-Pesa Views
-"""
 
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
@@ -14,10 +11,8 @@ from datetime import datetime
 import logging
 import socket
 
-# Set up logging
 logger = logging.getLogger(__name__)
 
-# CORRECTED IMPORTS - Use local models and utils
 from .models import MpesaPayment, MpesaCallbackLog
 from .utils import MpesaAPI, validate_mpesa_phone
 
@@ -30,9 +25,7 @@ MPESA_ENVIRONMENT = getattr(settings, 'MPESA_ENVIRONMENT', 'sandbox')
 
 
 def is_localhost():
-    """
-    Check if the site is running on localhost
-    """
+    
     hostname = socket.gethostname()
     local_ips = ['127.0.0.1', 'localhost', '0.0.0.0']
     
@@ -43,7 +36,6 @@ def is_localhost():
         ip = s.getsockname()[0]
         s.close()
         
-        # Check if it's a local IP
         if ip.startswith('127.') or ip.startswith('192.168.') or ip.startswith('10.'):
             return True
     except:
@@ -55,9 +47,7 @@ def is_localhost():
 @login_required
 @require_http_methods(["POST"])
 def initiate_mpesa_payment(request):
-    """
-    Initiate M-Pesa STK Push payment
-    """
+    
     try:
         # Log the request
         logger.info(f"M-Pesa initiation request from user {request.user.id}")
@@ -78,17 +68,15 @@ def initiate_mpesa_payment(request):
         amount = data.get('amount')
         order_id = data.get('order_id', '').strip()
         
-        # Log extracted data
+        
         logger.info(f"Received: phone={phone_number}, amount={amount}, order={order_id}")
         
-        # Validate phone number
         if not phone_number:
             return JsonResponse({
                 'success': False,
                 'message': 'Phone number is required'
             }, status=400)
         
-        # Validate amount
         if not amount:
             return JsonResponse({
                 'success': False,
@@ -108,7 +96,6 @@ def initiate_mpesa_payment(request):
                 'message': 'Amount must be a valid number'
             }, status=400)
         
-        # Validate phone number format
         is_valid, formatted_phone = validate_mpesa_phone(phone_number)
         if not is_valid:
             return JsonResponse({
@@ -125,17 +112,13 @@ def initiate_mpesa_payment(request):
             environment=MPESA_ENVIRONMENT
         )
         
-        # Use ngrok URL for callback (hardcode for testing)
-        callback_url = "https://671d-102-219-210-42.ngrok-free.app/mpesa/callback/"
+        callback_url = "https://ea2e-197-138-81-100.ngrok-free.app/mpesa/callback/"
         
-        # Account reference
         account_ref = order_id if order_id else f"UniMart{request.user.id}"
         
-        # Transaction description
         trans_desc = f"ORDER {order_id}" if order_id else "UniMart PURCHASE"
         trans_desc = trans_desc[:13]
         
-        # Initiate STK Push
         result = mpesa.stk_push(
             phone_number=formatted_phone,
             amount=int(amount),
@@ -183,25 +166,18 @@ def initiate_mpesa_payment(request):
 @csrf_exempt
 @require_http_methods(["POST"])
 def mpesa_callback(request):
-    """
-    Handle M-Pesa payment callback
-    This URL must be accessible from the internet (use ngrok for local testing)
-    """
+    
     try:
-        # Parse callback data
         callback_data = json.loads(request.body)
         
-        # Log the callback for debugging
         logger.info(f"M-Pesa callback received: {callback_data}")
         
-        # Log the callback
         callback_log = MpesaCallbackLog.objects.create(
             checkout_request_id=callback_data.get('Body', {}).get('stkCallback', {}).get('CheckoutRequestID', ''),
             raw_data=callback_data,
             processed=False
         )
         
-        # Extract callback details
         stk_callback = callback_data.get('Body', {}).get('stkCallback', {})
         checkout_request_id = stk_callback.get('CheckoutRequestID')
         merchant_request_id = stk_callback.get('MerchantRequestID')
@@ -223,10 +199,9 @@ def mpesa_callback(request):
         payment.result_description = result_desc
         payment.callback_data = callback_data
         
-        if result_code == '0':  # Success
+        if result_code == '0':  
             payment.status = 'completed'
             
-            # Extract additional details from callback
             callback_metadata = stk_callback.get('CallbackMetadata', {}).get('Item', [])
             for item in callback_metadata:
                 name = item.get('Name')
@@ -237,7 +212,6 @@ def mpesa_callback(request):
                 elif name == 'Amount':
                     payment.amount = value
                 elif name == 'TransactionDate':
-                    # Convert timestamp to datetime
                     trans_date = str(value)
                     try:
                         payment.transaction_date = datetime.strptime(trans_date, '%Y%m%d%H%M%S')
@@ -248,7 +222,6 @@ def mpesa_callback(request):
             
             logger.info(f"Payment completed successfully. Receipt: {payment.mpesa_receipt_number}")
             
-            # Update order status if order_id exists
             if payment.order_id:
                 try:
                     from orders.models import Order
@@ -261,13 +234,12 @@ def mpesa_callback(request):
                 except Exception as e:
                     logger.error(f"Error updating order: {e}")
             
-        else:  # Failed
+        else:  
             payment.status = 'failed'
             logger.warning(f"Payment failed: {result_desc}")
         
         payment.save()
         
-        # Mark callback as processed
         callback_log.processed = True
         callback_log.save()
         
