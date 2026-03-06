@@ -112,7 +112,7 @@ def initiate_mpesa_payment(request):
             environment=MPESA_ENVIRONMENT
         )
         
-        callback_url = "https://ea2e-197-138-81-100.ngrok-free.app/mpesa/callback/"
+        callback_url = "https://31ab-197-138-81-100.ngrok-free.app/mpesa/callback/"
         
         account_ref = order_id if order_id else f"UniMart{request.user.id}"
         

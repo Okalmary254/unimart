@@ -28,10 +28,8 @@ def start_ngrok():
         text=True
     )
     
-    # Wait for ngrok to start
     time.sleep(3)
     
-    # Get the ngrok URL from the API
     try:
         response = requests.get("http://localhost:4040/api/tunnels")
         tunnels = response.json()
@@ -41,7 +39,6 @@ def start_ngrok():
         print(f" Public URL: {public_url}")
         print(f"{'='*50}\n")
         
-        # Create a .env file with the ngrok URL
         with open('.env.ngrok', 'w') as f:
             f.write(f"NGROK_URL={public_url}\n")
             f.write(f"MPESA_CALLBACK_URL={public_url}/mpesa/callback/\n")
