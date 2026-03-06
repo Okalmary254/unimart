@@ -1,0 +1,130 @@
+{% extends 'store/admin/base.html' %}
+
+{% block title %}Admin Users - MNU Store Admin{% endblock %}
+{% block page_icon %}fas fa-users-cog{% endblock %}
+{% block page_title %}Admin User Management{% endblock %}
+
+{% block content %}
+<!-- Search and Add Bar -->
+<div class="search-bar">
+    <form method="get" style="display: flex; gap: 1rem; width: 100%;">
+        <input type="text" name="search" class="search-input" placeholder="Search users..." value="{{ search }}">
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-search"></i> Search
+        </button>
+        <a href="{% url 'store:admin_users' %}" class="btn btn-outline">
+            <i class="fas fa-redo"></i> Reset
+        </a>
+    </form>
+    
+    <a href="{% url 'store:admin_user_add' %}" class="btn btn-success">
+        <i class="fas fa-user-plus"></i> Add New Admin
+    </a>
+</div>
+
+<!-- Users Table -->
+<div class="table-responsive">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Last Login</th>
+                <th>Date Joined</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>#{{ user.id }}</td>
+                <td><strong>{{ user.username }}</strong></td>
+                <td>{{ user.get_full_name|default:'-' }}</td>
+                <td>{{ user.email }}</td>
+                <td>
+                    {% if user.is_superuser %}
+                    <span style="background: #f39c12; color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">
+                        <i class="fas fa-crown"></i> Super Admin
+                    </span>
+                    {% else %}
+                    <span style="background: #667eea; color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">
+                        <i class="fas fa-user-tie"></i> Staff
+                    </span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if user.is_active %}
+                    <span style="color: #27ae60;"><i class="fas fa-check-circle"></i> Active</span>
+                    {% else %}
+                    <span style="color: #ff4757;"><i class="fas fa-ban"></i> Inactive</span>
+                    {% endif %}
+                </td>
+                <td>{{ user.last_login|date:"M d, Y H:i"|default:'Never' }}</td>
+                <td>{{ user.date_joined|date:"M d, Y" }}</td>
+                <td>
+                    <div class="btn-group">
+                        <a href="{% url 'store:admin_user_edit' user.id %}" class="btn btn-primary btn-sm" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        {% if user.id != request.user.id %}
+                            <a href="{% url 'store:admin_user_toggle_status' user.id %}" class="btn btn-warning btn-sm" title="{% if user.is_active %}Deactivate{% else %}Activate{% endif %}" onclick="return confirm('{% if user.is_active %}Deactivate{% else %}Activate{% endif %} this user?')">
+                                {% if user.is_active %}
+                                <i class="fas fa-ban"></i>
+                                {% else %}
+                                <i class="fas fa-check"></i>
+                                {% endif %}
+                            </a>
+                            <a href="{% url 'store:admin_user_delete' user.id %}" class="btn btn-danger btn-sm" title="Delete" onclick="return confirm('Are you sure you want to delete this user?')">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        {% else %}
+                            <span class="btn btn-secondary btn-sm disabled" title="Cannot modify yourself">
+                                <i class="fas fa-lock"></i>
+                            </span>
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="9" style="text-align: center; padding: 3rem;">
+                    <i class="fas fa-users" style="font-size: 3rem; color: #ccc; margin-bottom: 1rem; display: block;"></i>
+                    <h3 style="color: #666;">No admin users found</h3>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Pagination -->
+{% if users.has_other_pages %}
+<div class="pagination">
+    {% if users.has_previous %}
+    <a href="?page={{ users.previous_page_number }}{% if search %}&search={{ search }}{% endif %}" class="page-link">
+        <i class="fas fa-chevron-left"></i>
+    </a>
+    {% endif %}
+    
+    {% for i in users.paginator.page_range %}
+        {% if users.number == i %}
+        <span class="page-item active">
+            <span class="page-link">{{ i }}</span>
+        </span>
+        {% elif i > users.number|add:'-3' and i < users.number|add:'3' %}
+        <a href="?page={{ i }}{% if search %}&search={{ search }}{% endif %}" class="page-link">{{ i }}</a>
+        {% endif %}
+    {% endfor %}
+    
+    {% if users.has_next %}
+    <a href="?page={{ users.next_page_number }}{% if search %}&search={{ search }}{% endif %}" class="page-link">
+        <i class="fas fa-chevron-right"></i>
+    </a>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

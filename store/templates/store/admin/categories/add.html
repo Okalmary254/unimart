@@ -1,0 +1,36 @@
+{% extends 'store/admin/base.html' %}
+
+{% block title %}Add Category - MNU Store Admin{% endblock %}
+{% block page_icon %}fas fa-folder-plus{% endblock %}
+{% block page_title %}Add New Category{% endblock %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    
+    <div class="form-group">
+        <label><i class="fas fa-tag"></i> Category Name *</label>
+        <input type="text" name="name" class="form-control" required placeholder="e.g., Electronics, Clothing, Books">
+    </div>
+    
+    <div class="form-group">
+        <label><i class="fas fa-icons"></i> Font Awesome Icon Class</label>
+        <input type="text" name="icon" class="form-control" placeholder="e.g., fas fa-laptop, fas fa-tshirt">
+        <small style="color: #666;">Enter the full Font Awesome class (e.g., fas fa-laptop). Leave empty for default folder icon.</small>
+    </div>
+    
+    <div class="form-group">
+        <label><i class="fas fa-align-left"></i> Description</label>
+        <textarea name="description" class="form-control" rows="4" placeholder="Brief description of this category"></textarea>
+    </div>
+    
+    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> Save Category
+        </button>
+        <a href="{% url 'store:admin_categories' %}" class="btn btn-outline">
+            <i class="fas fa-times"></i> Cancel
+        </a>
+    </div>
+</form>
+{% endblock %}

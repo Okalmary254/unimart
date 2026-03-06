@@ -1,0 +1,44 @@
+{% extends 'store/admin/base.html' %}
+
+{% block title %}Add Deal - MNU Store Admin{% endblock %}
+{% block page_icon %}fas fa-tag{% endblock %}
+{% block page_title %}Create New Deal{% endblock %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    
+    <div class="form-group">
+        <label><i class="fas fa-box"></i> Select Product *</label>
+        <select name="product" class="form-control" required>
+            <option value="">Choose a product...</option>
+            {% for product in products %}
+            <option value="{{ product.id }}">
+                {{ product.name }} - Current Price: Ksh {{ product.price|floatformat:2 }}
+            </option>
+            {% endfor %}
+        </select>
+        <small style="color: #666;">Only products without active discounts are shown</small>
+    </div>
+    
+    <div class="form-group">
+        <label><i class="fas fa-percent"></i> Discount Percentage *</label>
+        <input type="number" name="discount_percentage" class="form-control" step="0.01" min="1" max="99" required placeholder="e.g., 20">
+        <small style="color: #666;">Enter percentage (1-99)</small>
+    </div>
+    
+    <div style="background: #e8f5e9; padding: 1rem; border-radius: 8px; margin: 1.5rem 0;">
+        <i class="fas fa-info-circle" style="color: #27ae60;"></i>
+        <span style="color: #2e7d32;"> The discount will be applied immediately and shown to customers in the Deals section.</span>
+    </div>
+    
+    <div style="display: flex; gap: 1rem;">
+        <button type="submit" class="btn btn-success">
+            <i class="fas fa-check"></i> Create Deal
+        </button>
+        <a href="{% url 'store:admin_deals' %}" class="btn btn-outline">
+            <i class="fas fa-times"></i> Cancel
+        </a>
+    </div>
+</form>
+{% endblock %}

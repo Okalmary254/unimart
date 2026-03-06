@@ -1,0 +1,116 @@
+{% extends 'store/admin/base.html' %}
+{% load humanize %}
+
+{% block title %}Orders - MNU Store Admin{% endblock %}
+{% block page_icon %}fas fa-shopping-bag{% endblock %}
+{% block page_title %}Order Management{% endblock %}
+
+{% block content %}
+<!-- Search and Filter -->
+<div class="search-bar">
+    <form method="get" style="display: flex; gap: 1rem; width: 100%;">
+        <input type="text" name="search" class="search-input" placeholder="Search by order # or customer..." value="{{ search }}">
+        
+        <select name="status" class="filter-select">
+            <option value="">All Status</option>
+            {% for status_value, status_label in status_choices %}
+            <option value="{{ status_value }}" {% if current_status == status_value %}selected{% endif %}>
+                {{ status_label }}
+            </option>
+            {% endfor %}
+        </select>
+        
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-search"></i> Filter
+        </button>
+        
+        <a href="{% url 'store:admin_orders' %}" class="btn btn-outline">
+            <i class="fas fa-redo"></i> Reset
+        </a>
+    </form>
+</div>
+
+<!-- Orders Table -->
+<div class="table-responsive">
+    <table>
+        <thead>
+            <tr>
+                <th>Order #</th>
+                <th>Customer</th>
+                <th>Date</th>
+                <th>Items</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Payment</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td><strong>#{{ order.order_number }}</strong></td>
+                <td>
+                    {{ order.user.get_full_name|default:order.user.username }}<br>
+                    <small style="color: #666;">{{ order.user.email }}</small>
+                </td>
+                <td>{{ order.created_at|date:"M d, Y H:i" }}</td>
+                <td>{{ order.items_count }} items</td>
+                <td><strong>Ksh {{ order.total|floatformat:2|intcomma }}</strong></td>
+                <td>
+                    <span style="display: inline-block; padding: 0.3rem 1rem; border-radius: 20px; font-size: 0.85rem; 
+                        {% if order.status == 'delivered' %}background: #d4edda; color: #155724;
+                        {% elif order.status == 'shipped' %}background: #cce5ff; color: #004085;
+                        {% elif order.status == 'processing' %}background: #fff3cd; color: #856404;
+                        {% elif order.status == 'cancelled' %}background: #f8d7da; color: #721c24;
+                        {% endif %}">
+                        {{ order.get_status_display }}
+                    </span>
+                </td>
+                <td>
+                    <span style="color: #27ae60;">Completed</span>
+                </td>
+                <td>
+                    <a href="{% url 'store:admin_order_detail' order.id %}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-eye"></i> View
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8" style="text-align: center; padding: 3rem;">
+                    <i class="fas fa-shopping-bag" style="font-size: 3rem; color: #ccc; margin-bottom: 1rem; display: block;"></i>
+                    <h3 style="color: #666;">No orders found</h3>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Pagination -->
+{% if orders.has_other_pages %}
+<div class="pagination">
+    {% if orders.has_previous %}
+    <a href="?page={{ orders.previous_page_number }}{% if search %}&search={{ search }}{% endif %}{% if current_status %}&status={{ current_status }}{% endif %}" class="page-link">
+        <i class="fas fa-chevron-left"></i>
+    </a>
+    {% endif %}
+    
+    {% for i in orders.paginator.page_range %}
+        {% if orders.number == i %}
+        <span class="page-item active">
+            <span class="page-link">{{ i }}</span>
+        </span>
+        {% elif i > orders.number|add:'-3' and i < orders.number|add:'3' %}
+        <a href="?page={{ i }}{% if search %}&search={{ search }}{% endif %}{% if current_status %}&status={{ current_status }}{% endif %}" class="page-link">{{ i }}</a>
+        {% endif %}
+    {% endfor %}
+    
+    {% if orders.has_next %}
+    <a href="?page={{ orders.next_page_number }}{% if search %}&search={{ search }}{% endif %}{% if current_status %}&status={{ current_status }}{% endif %}" class="page-link">
+        <i class="fas fa-chevron-right"></i>
+    </a>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

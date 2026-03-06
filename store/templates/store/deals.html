@@ -1,0 +1,1657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hot Deals - MNU Online Store</title>
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Styles */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links a i {
+            font-size: 1.1rem;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .nav-links a.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .cart-icon {
+            position: relative;
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff4757;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        /* Hero Section - Special for Deals */
+        .hero {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff4757 100%);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            right: -50%;
+            bottom: -50%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 20px,
+                rgba(255, 255, 255, 0.1) 20px,
+                rgba(255, 255, 255, 0.1) 40px
+            );
+            animation: moveStripes 20s linear infinite;
+        }
+
+        @keyframes moveStripes {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            100% {
+                transform: translate(50px, 50px) rotate(45deg);
+            }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero h1 i {
+            margin-right: 0.5rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0.95;
+        }
+
+        .deal-timer {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .timer-block {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            border-radius: 15px;
+            min-width: 100px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .timer-block .number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .timer-block .label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 2rem;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            color: white;
+        }
+
+        .breadcrumb a {
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .breadcrumb a:hover {
+            opacity: 1;
+        }
+
+        .breadcrumb span {
+            opacity: 0.5;
+        }
+
+        /* Deal Stats */
+        .deal-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #ff6b6b, #ff4757);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-icon i {
+            font-size: 1.8rem;
+            color: white;
+        }
+
+        .stat-info h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #333;
+            line-height: 1;
+        }
+
+        .stat-info p {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            background: white;
+            border-radius: 15px;
+            padding: 1rem 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-options {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            padding: 0.5rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-select:hover {
+            border-color: #ff4757;
+        }
+
+        .results-count {
+            color: #666;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .results-count i {
+            color: #ff4757;
+        }
+
+        /* Deals Grid */
+        .deals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .deal-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            border: 1px solid rgba(255, 71, 87, 0.2);
+        }
+
+        .deal-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(255, 71, 87, 0.3);
+        }
+
+        .deal-ribbon {
+            position: absolute;
+            top: 20px;
+            left: -35px;
+            background: linear-gradient(135deg, #ff6b6b, #ff4757);
+            color: white;
+            padding: 0.5rem 3rem;
+            transform: rotate(-45deg);
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 10px rgba(255, 71, 87, 0.3);
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .deal-ribbon i {
+            font-size: 0.8rem;
+        }
+
+        .deal-image {
+            position: relative;
+            overflow: hidden;
+            height: 250px;
+        }
+
+        .deal-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .deal-card:hover .deal-image img {
+            transform: scale(1.1);
+        }
+
+        .discount-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: linear-gradient(135deg, #ff6b6b, #ff4757);
+            color: white;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            box-shadow: 0 5px 15px rgba(255, 71, 87, 0.4);
+            z-index: 1;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .discount-badge .percent {
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+
+        .discount-badge .off {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        .deal-content {
+            padding: 1.5rem;
+        }
+
+        .deal-category {
+            font-size: 0.85rem;
+            color: #ff4757;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .deal-category i {
+            font-size: 0.8rem;
+        }
+
+        .deal-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .deal-description {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .deal-progress {
+            margin-bottom: 1rem;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 0.3rem;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #ff6b6b, #ff4757);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .deal-timer-small {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f9fa;
+            padding: 0.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .deal-timer-small i {
+            color: #ff4757;
+        }
+
+        .timer-items {
+            display: flex;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .timer-items span {
+            background: white;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .price-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .price-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .original-price {
+            color: #999;
+            text-decoration: line-through;
+            font-size: 0.9rem;
+        }
+
+        .deal-price {
+            color: #ff4757;
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .deal-price i {
+            font-size: 1.1rem;
+        }
+
+        .saved-amount {
+            font-size: 0.8rem;
+            color: #27ae60;
+            display: flex;
+            align-items: center;
+            gap: 0.2rem;
+        }
+
+        .add-to-cart {
+            background: linear-gradient(135deg, #ff6b6b, #ff4757);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .add-to-cart:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 71, 87, 0.4);
+        }
+
+        .add-to-cart i {
+            font-size: 0.9rem;
+        }
+
+        /* Flash Deals Section */
+        .flash-deals {
+            margin-top: 4rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            color: white;
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-header h2 i {
+            color: #ff4757;
+            animation: zap 1s infinite;
+        }
+
+        @keyframes zap {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .view-all {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .view-all:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(5px);
+        }
+
+        .flash-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .flash-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .flash-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(255, 71, 87, 0.2);
+        }
+
+        .flash-image {
+            height: 150px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .flash-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .flash-timer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 0.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            backdrop-filter: blur(5px);
+        }
+
+        .flash-content {
+            padding: 1rem;
+        }
+
+        .flash-content h4 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .flash-price {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .flash-current {
+            color: #ff4757;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .flash-original {
+            color: #999;
+            text-decoration: line-through;
+            font-size: 0.9rem;
+        }
+
+        .flash-progress {
+            height: 4px;
+            background: #e0e0e0;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .flash-sold {
+            font-size: 0.8rem;
+            color: #666;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Coupons Section */
+        .coupons-section {
+            margin-top: 4rem;
+        }
+
+        .coupons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .coupon-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 15px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .coupon-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255, 255, 255, 0.1) 10px,
+                rgba(255, 255, 255, 0.1) 20px
+            );
+            animation: moveStripes 20s linear infinite;
+        }
+
+        .coupon-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .coupon-content {
+            position: relative;
+            z-index: 1;
+            color: white;
+        }
+
+        .coupon-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .coupon-code {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            display: inline-block;
+            margin: 1rem 0;
+            font-family: monospace;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+        }
+
+        .coupon-expiry {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .copy-btn {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .copy-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 3rem;
+        }
+
+        .page-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: white;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-btn:hover {
+            background: linear-gradient(135deg, #ff6b6b, #ff4757);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .page-btn.active {
+            background: linear-gradient(135deg, #ff6b6b, #ff4757);
+            color: white;
+        }
+
+        .page-btn.next {
+            width: auto;
+            padding: 0 1.5rem;
+            gap: 0.5rem;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            grid-column: 1 / -1;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: #ff4757;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h3 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+
+        .empty-state .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, #ff6b6b, #ff4757);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .empty-state .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 71, 87, 0.4);
+        }
+
+        /* Footer */
+        .footer {
+            background: #2c3e50;
+            color: white;
+            margin-top: 4rem;
+            padding: 3rem 2rem 1rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            color: #ff6b6b;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section ul li i {
+            margin-right: 0.5rem;
+            width: 1.2rem;
+            color: #ff6b6b;
+        }
+
+        .footer-section a {
+            color: #ecf0f1;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .footer-section a:hover {
+            color: #ff6b6b;
+        }
+
+        .footer-section a i {
+            margin-right: 0.5rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: linear-gradient(135deg, #ff6b6b, #ff4757);
+            transform: translateY(-3px);
+        }
+
+        .social-links a i {
+            font-size: 1.2rem;
+            margin: 0;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            color: #bdc3c7;
+        }
+
+        .footer-bottom i {
+            color: #ff6b6b;
+            margin: 0 0.2rem;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .deal-card, .flash-card, .coupon-card {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .deal-timer {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .timer-block {
+                min-width: 70px;
+            }
+
+            .timer-block .number {
+                font-size: 1.8rem;
+            }
+
+            .deal-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <nav class="nav-container">
+            <!-- <div class="logo">
+                <i class="fas fa-book-open logo-icon"></i>
+                <span class="logo-text">MNU Online Store</span>
+            </div> -->
+            
+            <div class="nav-links">
+                <a href="/">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                <a href="/products/">
+                    <i class="fas fa-box"></i> Products
+                </a>
+                <a href="/categories/">
+                    <i class="fas fa-list"></i> Categories
+                </a>
+                <a href="/deals/" class="active">
+                    <i class="fas fa-tag"></i> Deals
+                </a>
+                <a href="/about/">
+                    <i class="fas fa-info-circle"></i> About
+                </a>
+                <a href="/contact/">
+                    <i class="fas fa-envelope"></i> Contact
+                </a>
+                <a href="/cart/" class="cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-badge">{{ cart_items_count|default:'0' }}</span>
+                </a>
+                <a href="/account/">
+                    <i class="fas fa-user"></i> Account
+                </a>
+                {% if user.is_authenticated and user.is_staff %}
+                <a href="{% url 'store:admin_dashboard' %}" class="{% if 'dashboard' in request.path %}active{% endif %}" style="background: #f39c12; color: white;">
+                    <i class="fas fa-cog"></i> Admin
+                </a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section with Timer -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>
+                <i class="fas fa-bolt"></i>
+                HOT DEALS!
+            </h1>
+            <p>Limited time offers. Grab them before they're gone!</p>
+            
+            <div class="deal-timer" id="dealTimer">
+                <div class="timer-block">
+                    <div class="number" id="days">00</div>
+                    <div class="label">Days</div>
+                </div>
+                <div class="timer-block">
+                    <div class="number" id="hours">00</div>
+                    <div class="label">Hours</div>
+                </div>
+                <div class="timer-block">
+                    <div class="number" id="minutes">00</div>
+                    <div class="label">Minutes</div>
+                </div>
+                <div class="timer-block">
+                    <div class="number" id="seconds">00</div>
+                    <div class="label">Seconds</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+            <a href="/"><i class="fas fa-home"></i> Home</a>
+            <span>/</span>
+            <span><i class="fas fa-tag"></i> Deals</span>
+        </div>
+
+        <!-- Deal Stats -->
+        <div class="deal-stats">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-percent"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Up to 70%</h3>
+                    <p>Discount on items</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>24h 30m</h3>
+                    <p>Remaining time</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-fire"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>156 items</h3>
+                    <p>Sold in last hour</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-gift"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Free Shipping</h3>
+                    <p>On orders over Ksh 2000</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <select class="filter-select" id="categoryFilter">
+            <option value="">All Categories</option>
+            {% for category in categories %}
+            <option value="{{ category.id }}" {% if selected_category_id == category.id %}selected
+            {% endif %}>
+            {{ category.name }}
+            </option>
+            {% endfor %}
+        </select>
+
+        <!-- Deals Grid -->
+        <div class="deals-grid" id="dealsGrid">
+            {% for product in products %}
+                <div class="deal-card" 
+                     data-discount="{{ product.discount_percentage|default:0 }}" 
+                     data-price="{{ product.price }}"
+                     data-category="{{ product.category.name|lower|default:'uncategorized' }}">
+                    
+                    <div class="deal-ribbon">
+                        <i class="fas fa-bolt"></i> LIMITED
+                    </div>
+                    
+                    <div class="deal-image">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                        {% else %}
+                            <div style="background: #f0f0f0; height: 100%; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-tag" style="font-size: 3rem; color: #999;"></i>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="discount-badge">
+                            <span class="percent">{{ product.discount_percentage|default:"30" }}%</span>
+                            <span class="off">OFF</span>
+                        </div>
+                    </div>
+                    
+                    <div class="deal-content">
+                        <div class="deal-category">
+                            <i class="fas fa-tag"></i> {{ product.category.name|default:"Uncategorized" }}
+                        </div>
+                        
+                        <h3>{{ product.name }}</h3>
+                        <p class="deal-description">{{ product.description|truncatechars:80 }}</p>
+                        
+                        <div class="deal-progress">
+                            <div class="progress-header">
+                                <span><i class="fas fa-fire"></i> Selling fast!</span>
+                                <span>{{ product.sold_count|default:"45" }}/{{ product.stock|default:"100" }} sold</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: {% widthratio product.sold_count|default:45 product.stock|default:100 100 %}%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="deal-timer-small">
+                            <i class="fas fa-hourglass-half"></i>
+                            <div class="timer-items">
+                                <span>02</span>:<span>15</span>:<span>30</span>
+                            </div>
+                            <span style="margin-left: auto; font-size: 0.8rem;">left</span>
+                        </div>
+                        
+                        <div class="price-section">
+                            <div class="price-info">
+                                <span class="original-price">Ksh {{ product.price }}</span>
+                                <span class="deal-price">
+                                    <i class="fas fa-coins"></i> 
+                                    Ksh {{ product.discounted_price|default:product.price|floatformat:0 }}
+                                </span>
+                                <span class="saved-amount">
+                                    <i class="fas fa-check-circle"></i> 
+                                    Save Ksh {% widthratio product.discount_percentage|default:30 1 product.price %}
+                                </span>
+                            </div>
+                            
+                            <button class="add-to-cart" onclick="addToDealCart(this, '{{ product.id }}')">
+                                <i class="fas fa-bolt"></i> Grab Deal
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="empty-state">
+                    <i class="fas fa-tag"></i>
+                    <h3>No Deals Available</h3>
+                    <p>Check back later for exciting offers!</p>
+                    <a href="/products/" class="btn">
+                        <i class="fas fa-box"></i> Browse Products
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Flash Deals Section -->
+        {% if products %}
+        <div class="flash-deals">
+            <div class="section-header">
+                <h2>
+                    <i class="fas fa-bolt"></i>
+                    Flash Deals - Ending Soon
+                </h2>
+                <a href="#" class="view-all">
+                    View All <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            
+            <div class="flash-grid">
+                {% for product in products|slice:":4" %}
+                    <div class="flash-card">
+                        <div class="flash-image">
+                            {% if product.image %}
+                                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                            {% else %}
+                                <div style="background: #f0f0f0; height: 100%;"></div>
+                            {% endif %}
+                            <div class="flash-timer">
+                                <i class="fas fa-clock"></i>
+                                <span>02:15:30</span>
+                            </div>
+                        </div>
+                        <div class="flash-content">
+                            <h4>{{ product.name|truncatechars:40 }}</h4>
+                            <div class="flash-price">
+                                <span class="flash-current">Ksh {{ product.discounted_price|default:product.price|floatformat:0 }}</span>
+                                <span class="flash-original">Ksh {{ product.price }}</span>
+                            </div>
+                            <div class="flash-progress">
+                                <div class="progress-fill" style="width: 75%"></div>
+                            </div>
+                            <div class="flash-sold">
+                                <span><i class="fas fa-fire"></i> 75% sold</span>
+                                <span>{{ product.stock|default:"25" }} left</span>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Coupons Section -->
+        <div class="coupons-section">
+            <div class="section-header">
+                <h2>
+                    <i class="fas fa-ticket-alt"></i>
+                    Exclusive Coupons
+                </h2>
+                <a href="#" class="view-all">
+                    View All <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            
+            <div class="coupons-grid">
+                <div class="coupon-card">
+                    <div class="coupon-content">
+                        <div class="coupon-icon">
+                            <i class="fas fa-gift"></i>
+                        </div>
+                        <h3>Student Special</h3>
+                        <p>Get 20% off on all stationery</p>
+                        <div class="coupon-code">STUDENT20</div>
+                        <div class="coupon-expiry">
+                            <i class="fas fa-calendar-alt"></i> Expires: Mar 31, 2026
+                        </div>
+                        <button class="copy-btn" onclick="copyCoupon('STUDENT20')">
+                            <i class="fas fa-copy"></i> Copy Code
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="coupon-card">
+                    <div class="coupon-content">
+                        <div class="coupon-icon">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <h3>Free Delivery</h3>
+                        <p>On orders above Ksh 2000</p>
+                        <div class="coupon-code">FREESHIP</div>
+                        <div class="coupon-expiry">
+                            <i class="fas fa-calendar-alt"></i> Expires: Apr 15, 2026
+                        </div>
+                        <button class="copy-btn" onclick="copyCoupon('FREESHIP')">
+                            <i class="fas fa-copy"></i> Copy Code
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="coupon-card">
+                    <div class="coupon-content">
+                        <div class="coupon-icon">
+                            <i class="fas fa-laptop"></i>
+                        </div>
+                        <h3>Electronics Sale</h3>
+                        <p>15% off on all electronics</p>
+                        <div class="coupon-code">TECH15</div>
+                        <div class="coupon-expiry">
+                            <i class="fas fa-calendar-alt"></i> Expires: Mar 30, 2026
+                        </div>
+                        <button class="copy-btn" onclick="copyCoupon('TECH15')">
+                            <i class="fas fa-copy"></i> Copy Code
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination">
+            <button class="page-btn">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn">4</button>
+            <button class="page-btn">5</button>
+            <button class="page-btn next">
+                Next <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+        {% endif %}
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <div class="footer-content">
+            <!-- <div class="footer-section">
+                <h3><i class="fas fa-store"></i> About UniMart</h3>
+                <p>Your one-stop shop for all products. We offer quality items at affordable prices for students and staff.</p>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/phil.anth.ropist"><i class="fab fa-instagram"></i></a>
+                    <a href="https://x.com/jean__marie_"><i class="fab fa-twitter"></i></a>
+                    <a href="https://wa.me/254743874690"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div> -->
+            <div class="footer-section">
+                <h3><i class="fas fa-store"></i> About {% if site_settings %}{{ site_settings.site_name }}{% else %}UniMart{% endif %}</h3>
+                <p>{{ site_settings.about_text|default:"Your one-stop shop for all products. We offer quality items at affordable prices for students and staff." }}</p>
+                <!-- <div class="social-links">
+
+                    {% if site_settings.facebook %}
+                    <a href="{{ site_settings.facebook }}" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                    {% endif %}
+                    {% if site_settings.instagram %}
+                    <a href="{{ site_settings.instagram }}" target="_blank"><i class="fab fa-instagram"></i></a>
+                    {% endif %}
+                    {% if site_settings.twitter %}
+                    <a href="{{ site_settings.twitter }}" target="_blank"><i class="fab fa-twitter"></i></a>
+                    {% endif %}
+                    {% if site_settings.whatsapp %}
+                    <a href="{{ site_settings.whatsapp }}" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                    {% endif %}
+                </div> -->
+                <div class="social-links">
+                    <a href="https://www.instagram.com/phil.anth.ropist"><i class="fab fa-instagram"></i></a>
+                    <a href="https://x.com/jean__marie_"><i class="fab fa-twitter"></i></a>
+                    <a href="https://wa.me/254743874690"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h3><i class="fas fa-link"></i> Quick Links</h3>
+                <ul>
+                    <li><a href="{% url 'store:about' %}"><i class="fas fa-chevron-right"></i> About Us</a></li>
+                    <li><a href="{% url 'store:contact' %}"><i class="fas fa-chevron-right"></i> Contact Us</a></li>
+                    <li><a href="{% url 'store:faq' %}"><i class="fas fa-chevron-right"></i> FAQ</a></li>
+                    <li><a href="{% url 'store:shipping' %}"><i class="fas fa-chevron-right"></i> Shipping Info</a></li>
+                    <li><a href="{% url 'store:returns' %}"><i class="fas fa-chevron-right"></i> Returns Policy</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3><i class="fas fa-tags"></i> Categories</h3>
+                <ul>
+                    {% for category in categories|slice:":6" %}
+                        {% if category.slug %}
+                        <li><a href="{% url 'store:category_detail' category.slug %}"><i class="{{ category.icon|default:'fas fa-folder' }}"></i> {{ category.name }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3><i class="fas fa-address-card"></i> Contact Info</h3>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> {{ site_settings.contact_address|default:"Mama Ngina University" }}</li>
+                    <li><i class="fas fa-phone-alt"></i> {{ site_settings.contact_phone|default:"+2547 4387 4690" }}</li>
+                    <li><i class="fas fa-envelope"></i> {{ site_settings.contact_email|default:"info@unimart.ac.ke" }}</li>
+                    <li><i class="fas fa-clock"></i> {{ site_settings.business_hours|default:"Mon-Fri: 8am - 6pm" }}</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; {% now "Y" %} {% if site_settings %}{{ site_settings.site_name }}{% else %}UniMart{% endif %}. All rights reserved. | Designed with <i class="fas fa-heart"></i> for comrades</p>
+            <p>Maintained by <a href="{{ site_settings.maintainer_url|default:'https://okalmjohn.netlify.app' }}" target="_blank">{{ site_settings.maintainer_name|default:'Jean Marie' }}</a></p>
+        </div>
+    </footer>
+
+    <script>
+        // Countdown Timer
+        function updateTimer() {
+            // Set the date we're counting down to (24 hours from now)
+            const countDownDate = new Date().getTime() + (24 * 60 * 60 * 1000);
+            
+            // Update every second
+            const timer = setInterval(function() {
+                const now = new Date().getTime();
+                const distance = countDownDate - now;
+                
+                // Time calculations
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                
+                // Display the result
+                document.getElementById('days').innerHTML = String(days).padStart(2, '0');
+                document.getElementById('hours').innerHTML = String(hours).padStart(2, '0');
+                document.getElementById('minutes').innerHTML = String(minutes).padStart(2, '0');
+                document.getElementById('seconds').innerHTML = String(seconds).padStart(2, '0');
+                
+                // If the count down is finished, display expired
+                if (distance < 0) {
+                    clearInterval(timer);
+                    document.getElementById('dealTimer').innerHTML = '<div class="timer-block"><div class="number">EXPIRED</div></div>';
+                }
+            }, 1000);
+        }
+        
+        // Start the timer
+        updateTimer();
+
+        // Sort functionality
+        document.getElementById('sortSelect')?.addEventListener('change', function() {
+            const sortBy = this.value;
+            const grid = document.getElementById('dealsGrid');
+            const cards = Array.from(grid.getElementsByClassName('deal-card'));
+            
+            if (sortBy === 'discount_high') {
+                cards.sort((a, b) => parseFloat(b.dataset.discount) - parseFloat(a.dataset.discount));
+            } else if (sortBy === 'price_low') {
+                cards.sort((a, b) => parseFloat(a.dataset.price) - parseFloat(b.dataset.price));
+            } else if (sortBy === 'price_high') {
+                cards.sort((a, b) => parseFloat(b.dataset.price) - parseFloat(a.dataset.price));
+            }
+            
+            // Reorder cards
+            cards.forEach(card => grid.appendChild(card));
+        });
+
+        // Category filter
+        document.getElementById('categoryFilter')?.addEventListener('change', function() {
+            const category = this.value.toLowerCase();
+            const cards = document.querySelectorAll('.deal-card');
+            
+            cards.forEach(card => {
+                if (!category || card.dataset.category === category) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // Add to cart function for deals
+        function addToDealCart(btn, productId) {
+            const badge = document.querySelector('.cart-badge');
+            const currentCount = parseInt(badge.textContent) || 0;
+            
+            // Update cart badge
+            badge.textContent = currentCount + 1;
+            
+            // Show feedback
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i> Added!';
+            btn.style.background = '#27ae60';
+            
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.style.background = 'linear-gradient(135deg, #ff6b6b, #ff4757)';
+            }, 2000);
+        }
+
+        // Copy coupon code
+        function copyCoupon(code) {
+            navigator.clipboard.writeText(code).then(() => {
+                const btn = event.target.closest('.copy-btn');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                }, 2000);
+            });
+        }
+
+        // Update timer for flash deals (example)
+        function updateFlashTimers() {
+            const timers = document.querySelectorAll('.flash-timer span:last-child');
+            timers.forEach(timer => {
+                // In a real app, you'd calculate based on actual end times
+                // This is just for demonstration
+                const time = timer.textContent;
+                const [hours, minutes, seconds] = time.split(':').map(Number);
+                
+                if (hours === 0 && minutes === 0 && seconds === 0) {
+                    timer.textContent = 'EXPIRED';
+                } else {
+                    // Update logic here
+                }
+            });
+        }
+
+        // Run flash timer updates every second
+        setInterval(updateFlashTimers, 1000);
+
+            document.getElementById('categoryFilter')?.addEventListener('change', function() {
+            const category = this.value;
+            const url = new URL(window.location.href);
+            
+            if (category) {
+                url.searchParams.set('category', category);
+            } else {
+                url.searchParams.delete('category');
+            }
+            
+            // Preserve other query parameters
+            const sort = document.getElementById('sortSelect').value;
+            if (sort) {
+                url.searchParams.set('sort', sort);
+            }
+            
+            window.location.href = url.toString();
+        });
+
+        // Sort functionality
+        document.getElementById('sortSelect')?.addEventListener('change', function() {
+            const sort = this.value;
+            const url = new URL(window.location.href);
+            
+            if (sort) {
+                url.searchParams.set('sort', sort);
+            } else {
+                url.searchParams.delete('sort');
+            }
+            
+            // Preserve category filter
+            const category = document.getElementById('categoryFilter').value;
+            if (category) {
+                url.searchParams.set('category', category);
+            }
+            
+            window.location.href = url.toString();
+        });
+
+        // Set selected values based on URL parameters
+        window.addEventListener('load', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            const category = urlParams.get('category');
+            if (category) {
+                document.getElementById('categoryFilter').value = category;
+            }
+            
+            const sort = urlParams.get('sort');
+            if (sort) {
+                document.getElementById('sortSelect').value = sort;
+            }
+        });    
+    </script>
+    
+</body>
+</html>

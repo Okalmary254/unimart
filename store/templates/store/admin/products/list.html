@@ -1,0 +1,212 @@
+{% extends 'store/admin/base.html' %}
+{% load humanize %}
+
+{% block title %}Products - MNU Store Admin{% endblock %}
+{% block page_icon %}fas fa-box{% endblock %}
+{% block page_title %}Products Management{% endblock %}
+
+{% block content %}
+<!-- Search and Filter Bar -->
+<div class="search-bar">
+    <form method="get" style="display: flex; gap: 1rem; width: 100%;">
+        <input type="text" name="search" class="search-input" placeholder="Search products..." value="{{ search }}">
+        
+        <select name="category" class="filter-select">
+            <option value="">All Categories</option>
+            {% for category in categories %}
+            <option value="{{ category.id }}" {% if selected_category == category.id|stringformat:"s" %}selected{% endif %}>
+                {{ category.name }}
+            </option>
+            {% endfor %}
+        </select>
+        
+        <select name="stock" class="filter-select">
+            <option value="">All Stock</option>
+            <option value="low" {% if stock_status == 'low' %}selected{% endif %}>Low Stock (< 5)</option>
+            <option value="out" {% if stock_status == 'out' %}selected{% endif %}>Out of Stock</option>
+        </select>
+        
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-search"></i> Filter
+        </button>
+        
+        <a href="{% url 'store:admin_products' %}" class="btn btn-outline">
+            <i class="fas fa-redo"></i> Reset
+        </a>
+    </form>
+    
+    <a href="{% url 'store:admin_product_add' %}" class="btn btn-success">
+        <i class="fas fa-plus"></i> Add Product
+    </a>
+</div>
+
+<!-- Bulk Actions Form -->
+<form method="post" action="{% url 'store:admin_product_bulk_action' %}" id="bulkActionForm">
+    {% csrf_token %}
+    
+    <!-- Products Table -->
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th width="30">
+                        <input type="checkbox" id="selectAll" onclick="toggleAll()">
+                    </th>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Status</th>
+                    <th>Discount</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr>
+                    <td>
+                        <input type="checkbox" name="product_ids" value="{{ product.id }}" class="product-checkbox">
+                    </td>
+                    <td>
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
+                        {% else %}
+                        <div style="width: 50px; height: 50px; background: #f0f0f0; border-radius: 5px; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-image" style="color: #999;"></i>
+                        </div>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <strong>{{ product.name }}</strong><br>
+                        <small style="color: #666;">ID: {{ product.id }}</small>
+                    </td>
+                    <td>{{ product.category.name }}</td>
+                    <td>
+                        {% if product.discount_percentage > 0 %}
+                        <span style="text-decoration: line-through; color: #999;">Ksh {{ product.price|floatformat:2|intcomma }}</span><br>
+                        <strong style="color: #27ae60;">Ksh {{ product.discounted_price|floatformat:2|intcomma }}</strong>
+                        {% else %}
+                        <strong>Ksh {{ product.price|floatformat:2|intcomma }}</strong>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span style="color: {% if product.stock == 0 %}#ff4757{% elif product.stock < 5 %}#f39c12{% else %}#27ae60{% endif %};">
+                            {{ product.stock }}
+                        </span>
+                    </td>
+                    <td>
+                        {% if product.is_featured %}
+                        <span style="background: #667eea; color: white; padding: 0.2rem 0.5rem; border-radius: 3px; font-size: 0.7rem;">Featured</span>
+                        {% endif %}
+                        {% if product.is_new %}
+                        <span style="background: #27ae60; color: white; padding: 0.2rem 0.5rem; border-radius: 3px; font-size: 0.7rem;">New</span>
+                        {% endif %}
+                        {% if product.is_digital %}
+                        <span style="background: #f39c12; color: white; padding: 0.2rem 0.5rem; border-radius: 3px; font-size: 0.7rem;">Digital</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if product.discount_percentage > 0 %}
+                        <span style="color: #27ae60; font-weight: 600;">{{ product.discount_percentage }}% OFF</span>
+                        {% else %}
+                        <span style="color: #999;">-</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="btn-group">
+                            <a href="{% url 'store:admin_product_edit' product.id %}" class="btn btn-primary btn-sm" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="{% url 'store:admin_product_delete' product.id %}" class="btn btn-danger btn-sm" title="Delete" onclick="return confirm('Are you sure?')">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                            <a href="{% url 'store:product_detail' product.id %}" class="btn btn-outline btn-sm" title="View" target="_blank">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="9" style="text-align: center; padding: 3rem;">
+                        <i class="fas fa-box-open" style="font-size: 3rem; color: #ccc; margin-bottom: 1rem; display: block;"></i>
+                        <h3 style="color: #666; margin-bottom: 1rem;">No products found</h3>
+                        <a href="{% url 'store:admin_product_add' %}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Add Your First Product
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Bulk Actions -->
+    {% if products %}
+    <div style="margin-top: 1rem; display: flex; align-items: center; gap: 1rem;">
+        <select name="action" class="filter-select" style="width: auto;" required>
+            <option value="">Select Bulk Action</option>
+            <option value="delete">Delete Selected</option>
+            <option value="feature">Mark as Featured</option>
+            <option value="unfeature">Remove from Featured</option>
+        </select>
+        <button type="submit" class="btn btn-warning" onclick="return confirm('Apply bulk action to selected items?')">
+            <i class="fas fa-check-circle"></i> Apply
+        </button>
+        <span style="color: #666;" id="selectedCount">0 items selected</span>
+    </div>
+    {% endif %}
+</form>
+
+<!-- Pagination -->
+{% if products.has_other_pages %}
+<div class="pagination">
+    {% if products.has_previous %}
+    <a href="?page={{ products.previous_page_number }}{% if search %}&search={{ search }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}" class="page-link">
+        <i class="fas fa-chevron-left"></i>
+    </a>
+    {% endif %}
+    
+    {% for i in products.paginator.page_range %}
+        {% if products.number == i %}
+        <span class="page-item active">
+            <span class="page-link">{{ i }}</span>
+        </span>
+        {% elif i > products.number|add:'-3' and i < products.number|add:'3' %}
+        <a href="?page={{ i }}{% if search %}&search={{ search }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}" class="page-link">{{ i }}</a>
+        {% endif %}
+    {% endfor %}
+    
+    {% if products.has_next %}
+    <a href="?page={{ products.next_page_number }}{% if search %}&search={{ search }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}" class="page-link">
+        <i class="fas fa-chevron-right"></i>
+    </a>
+    {% endif %}
+</div>
+{% endif %}
+
+<script>
+function toggleAll() {
+    const checkboxes = document.getElementsByClassName('product-checkbox');
+    const selectAll = document.getElementById('selectAll');
+    for (let checkbox of checkboxes) {
+        checkbox.checked = selectAll.checked;
+    }
+    updateSelectedCount();
+}
+
+function updateSelectedCount() {
+    const checkboxes = document.getElementsByClassName('product-checkbox');
+    let count = 0;
+    for (let checkbox of checkboxes) {
+        if (checkbox.checked) count++;
+    }
+    document.getElementById('selectedCount').textContent = count + ' items selected';
+}
+
+document.querySelectorAll('.product-checkbox').forEach(checkbox => {
+    checkbox.addEventListener('change', updateSelectedCount);
+});
+</script>
+{% endblock %}

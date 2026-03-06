@@ -1,0 +1,70 @@
+{% extends 'store/admin/base.html' %}
+{% load humanize %}
+
+{% block title %}Categories - MNU Store Admin{% endblock %}
+{% block page_icon %}fas fa-list{% endblock %}
+{% block page_title %}Categories Management{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: flex-end; margin-bottom: 2rem;">
+    <a href="{% url 'store:admin_category_add' %}" class="btn btn-success">
+        <i class="fas fa-plus"></i> Add Category
+    </a>
+</div>
+
+<div class="table-responsive">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Icon</th>
+                <th>Name</th>
+                <th>Slug</th>
+                <th>Description</th>
+                <th>Products</th>
+                <th>Created</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for category in categories %}
+            <tr>
+                <td>#{{ category.id }}</td>
+                <td style="font-size: 1.5rem;">
+                    {% if category.icon %}
+                    <i class="{{ category.icon }}"></i>
+                    {% else %}
+                    <i class="fas fa-folder"></i>
+                    {% endif %}
+                </td>
+                <td><strong>{{ category.name }}</strong></td>
+                <td><code>{{ category.slug }}</code></td>
+                <td>{{ category.description|truncatechars:50 }}</td>
+                <td><span class="badge" style="background: #667eea; color: white; padding: 0.3rem 0.8rem; border-radius: 20px;">{{ category.product_count }}</span></td>
+                <td>{{ category.created_at|date:"M d, Y" }}</td>
+                <td>
+                    <div class="btn-group">
+                        <a href="{% url 'store:admin_category_edit' category.id %}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="{% url 'store:admin_category_delete' category.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure? This will affect all products in this category.')">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8" style="text-align: center; padding: 3rem;">
+                    <i class="fas fa-folder-open" style="font-size: 3rem; color: #ccc; margin-bottom: 1rem; display: block;"></i>
+                    <h3 style="color: #666; margin-bottom: 1rem;">No categories found</h3>
+                    <a href="{% url 'store:admin_category_add' %}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add Your First Category
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

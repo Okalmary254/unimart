@@ -1,0 +1,25 @@
+{% extends 'store/admin/base.html' %}
+
+{% block title %}Delete Message - MNU Store Admin{% endblock %}
+{% block page_icon %}fas fa-trash-alt{% endblock %}
+{% block page_title %}Delete Message{% endblock %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto; text-align: center;">
+    <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 15px; padding: 2rem; margin-bottom: 2rem;">
+        <i class="fas fa-exclamation-triangle" style="font-size: 4rem; color: #ffc107; margin-bottom: 1rem;"></i>
+        <h2 style="color: #856404; margin-bottom: 1rem;">Delete Message</h2>
+        <p style="color: #856404; font-size: 1.1rem;">
+            Are you sure you want to delete this message from <strong>"{{ message.name }}"</strong>?
+        </p>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <div style="display: flex; gap: 1rem; justify-content: center;">
+            <button type="submit" class="btn btn-danger">Yes, Delete</button>
+            <a href="{% url 'store:admin_messages' %}" class="btn btn-outline">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

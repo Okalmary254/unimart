@@ -1,0 +1,38 @@
+{% extends 'store/admin/base.html' %}
+
+{% block title %}Delete User - MNU Store Admin{% endblock %}
+{% block page_icon %}fas fa-user-times{% endblock %}
+{% block page_title %}Delete User: {{ delete_user.username }}{% endblock %}
+
+{% block content %}
+<div style="max-width: 500px; margin: 0 auto; text-align: center;">
+    <div style="background: #fff3cd; color: #856404; padding: 2rem; border-radius: 10px; margin-bottom: 2rem;">
+        <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+        <h3 style="margin-bottom: 1rem;">Warning!</h3>
+        <p>You are about to delete the user <strong>"{{ delete_user.username }}"</strong>.</p>
+        <p>This action cannot be undone. All data associated with this user will be permanently removed.</p>
+    </div>
+    
+    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem; text-align: left;">
+        <h4 style="margin-bottom: 1rem;">User Details:</h4>
+        <p><strong>Username:</strong> {{ delete_user.username }}</p>
+        <p><strong>Name:</strong> {{ delete_user.get_full_name|default:'-' }}</p>
+        <p><strong>Email:</strong> {{ delete_user.email }}</p>
+        <p><strong>Role:</strong> {% if delete_user.is_superuser %}Super Admin{% else %}Staff{% endif %}</p>
+        <p><strong>Status:</strong> {% if delete_user.is_active %}Active{% else %}Inactive{% endif %}</p>
+        <p><strong>Date Joined:</strong> {{ delete_user.date_joined|date:"F d, Y" }}</p>
+    </div>
+    
+    <form method="post">
+        {% csrf_token %}
+        <div style="display: flex; gap: 1rem; justify-content: center;">
+            <button type="submit" class="btn btn-danger">
+                <i class="fas fa-trash"></i> Yes, Delete User
+            </button>
+            <a href="{% url 'store:admin_users' %}" class="btn btn-outline">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

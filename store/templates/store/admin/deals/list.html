@@ -1,0 +1,82 @@
+{% extends 'store/admin/base.html' %}
+{% load humanize %}
+
+{% block title %}Deals - MNU Store Admin{% endblock %}
+{% block page_icon %}fas fa-tag{% endblock %}
+{% block page_title %}Deals Management{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h3 style="color: #333;">Active Discounts</h3>
+    <a href="{% url 'store:admin_deals_add' %}" class="btn btn-success">
+        <i class="fas fa-plus"></i> Add New Deal
+    </a>
+</div>
+
+<div class="table-responsive">
+    <table>
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Category</th>
+                <th>Original Price</th>
+                <th>Discount</th>
+                <th>Deal Price</th>
+                <th>Stock</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
+                        {% endif %}
+                        <strong>{{ product.name }}</strong>
+                    </div>
+                </td>
+                <td>{{ product.category.name }}</td>
+                <td><span style="text-decoration: line-through; color: #999;">Ksh {{ product.price|floatformat:2|intcomma }}</span></td>
+                <td>
+                    <span style="background: #27ae60; color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-weight: 600;">
+                        {{ product.discount_percentage }}% OFF
+                    </span>
+                </td>
+                <td><strong style="color: #27ae60; font-size: 1.1rem;">Ksh {{ product.discounted_price|floatformat:2|intcomma }}</strong></td>
+                <td>
+                    <span style="color: {% if product.stock == 0 %}#ff4757{% elif product.stock < 5 %}#f39c12{% else %}#27ae60{% endif %};">
+                        {{ product.stock }}
+                    </span>
+                </td>
+                <td>
+                    <div class="btn-group">
+                        <form method="post" action="{% url 'store:admin_deals_remove' product.id %}" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Remove discount from this product?')">
+                                <i class="fas fa-times"></i> Remove Deal
+                            </button>
+                        </form>
+                        <a href="{% url 'store:admin_product_edit' product.id %}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" style="text-align: center; padding: 3rem;">
+                    <i class="fas fa-tag" style="font-size: 3rem; color: #ccc; margin-bottom: 1rem; display: block;"></i>
+                    <h3 style="color: #666; margin-bottom: 1rem;">No active deals</h3>
+                    <p style="color: #999; margin-bottom: 1.5rem;">Create your first deal to start promoting products</p>
+                    <a href="{% url 'store:admin_deals_add' %}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Create New Deal
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

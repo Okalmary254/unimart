@@ -1,0 +1,81 @@
+{% extends 'store/admin/base.html' %}
+
+{% block title %}Add Product - MNU Store Admin{% endblock %}
+{% block page_icon %}fas fa-plus-circle{% endblock %}
+{% block page_title %}Add New Product{% endblock %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    <div class="form-row">
+        <div class="form-group">
+            <label><i class="fas fa-tag"></i> Product Name *</label>
+            <input type="text" name="name" class="form-control" required>
+        </div>
+        
+        <div class="form-group">
+            <label><i class="fas fa-list"></i> Category *</label>
+            <select name="category" class="form-control" required>
+                <option value="">Select Category</option>
+                {% for category in categories %}
+                <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label><i class="fas fa-align-left"></i> Description *</label>
+        <textarea name="description" class="form-control" rows="5" required></textarea>
+    </div>
+    
+    <div class="form-row">
+        <div class="form-group">
+            <label><i class="fas fa-coins"></i> Price (Ksh) *</label>
+            <input type="number" name="price" class="form-control" step="0.01" min="0" required>
+        </div>
+        
+        <div class="form-group">
+            <label><i class="fas fa-boxes"></i> Stock Quantity *</label>
+            <input type="number" name="stock" class="form-control" min="0" required>
+        </div>
+    </div>
+    
+    <div class="form-row">
+        <div class="form-group">
+            <label><i class="fas fa-percent"></i> Discount Percentage</label>
+            <input type="number" name="discount_percentage" class="form-control" step="0.01" min="0" max="100" value="0">
+        </div>
+        
+        <div class="form-group">
+            <label><i class="fas fa-image"></i> Product Image</label>
+            <input type="file" name="image" class="form-control" accept="image/*">
+            <small style="color: #666;">Leave empty if no image</small>
+        </div>
+    </div>
+    
+    <div style="display: flex; gap: 2rem; margin: 1.5rem 0;">
+        <label class="checkbox-group">
+            <input type="checkbox" name="is_digital"> <i class="fas fa-download"></i> Digital Product
+        </label>
+        
+        <label class="checkbox-group">
+            <input type="checkbox" name="is_featured"> <i class="fas fa-star"></i> Featured Product
+        </label>
+        
+        <label class="checkbox-group">
+            <input type="checkbox" name="is_new" checked> <i class="fas fa-bolt"></i> Mark as New
+        </label>
+    </div>
+    
+    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> Save Product
+        </button>
+        <a href="{% url 'store:admin_products' %}" class="btn btn-outline">
+            <i class="fas fa-times"></i> Cancel
+        </a>
+    </div>
+</form>
+{% endblock %}

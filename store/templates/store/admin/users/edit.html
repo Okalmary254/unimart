@@ -1,0 +1,80 @@
+{% extends 'store/admin/base.html' %}
+
+{% block title %}Edit User - MNU Store Admin{% endblock %}
+{% block page_icon %}fas fa-user-edit{% endblock %}
+{% block page_title %}Edit: {{ edit_user.username }}{% endblock %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    
+    <div class="form-row">
+        <div class="form-group">
+            <label><i class="fas fa-user"></i> Username *</label>
+            <input type="text" name="username" class="form-control" value="{{ edit_user.username }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label><i class="fas fa-envelope"></i> Email *</label>
+            <input type="email" name="email" class="form-control" value="{{ edit_user.email }}" required>
+        </div>
+    </div>
+    
+    <div class="form-row">
+        <div class="form-group">
+            <label><i class="fas fa-user-tag"></i> First Name</label>
+            <input type="text" name="first_name" class="form-control" value="{{ edit_user.first_name }}">
+        </div>
+        
+        <div class="form-group">
+            <label><i class="fas fa-user-tag"></i> Last Name</label>
+            <input type="text" name="last_name" class="form-control" value="{{ edit_user.last_name }}">
+        </div>
+    </div>
+    
+    <div class="form-row">
+        <div class="form-group">
+            <label><i class="fas fa-lock"></i> New Password (leave blank to keep current)</label>
+            <input type="password" name="password" class="form-control">
+        </div>
+        
+        <div class="form-group">
+            <label><i class="fas fa-lock"></i> Confirm New Password</label>
+            <input type="password" name="confirm_password" class="form-control">
+        </div>
+    </div>
+    
+    <div style="display: flex; gap: 2rem; margin: 1.5rem 0;">
+        <label class="checkbox-group">
+            <input type="checkbox" name="is_superuser" {% if edit_user.is_superuser %}checked{% endif %}> 
+            <i class="fas fa-crown" style="color: #f39c12;"></i> Super Admin
+        </label>
+        
+        <label class="checkbox-group">
+            <input type="checkbox" name="is_active" {% if edit_user.is_active %}checked{% endif %}> 
+            <i class="fas fa-check-circle" style="color: #27ae60;"></i> Active
+        </label>
+    </div>
+    
+    <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin: 1.5rem 0;">
+        <p><strong>User Info:</strong></p>
+        <p>Date Joined: {{ edit_user.date_joined|date:"F d, Y H:i" }}</p>
+        <p>Last Login: {{ edit_user.last_login|date:"F d, Y H:i"|default:'Never' }}</p>
+        <p>Staff Status: {% if edit_user.is_staff %}Yes{% else %}No{% endif %}</p>
+    </div>
+    
+    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> Update User
+        </button>
+        <a href="{% url 'store:admin_users' %}" class="btn btn-outline">
+            <i class="fas fa-arrow-left"></i> Back to Users
+        </a>
+        {% if edit_user.id != request.user.id %}
+        <a href="{% url 'store:admin_user_delete' edit_user.id %}" class="btn btn-danger" style="margin-left: auto;" onclick="return confirm('Are you sure you want to delete this user?')">
+            <i class="fas fa-trash"></i> Delete User
+        </a>
+        {% endif %}
+    </div>
+</form>
+{% endblock %}

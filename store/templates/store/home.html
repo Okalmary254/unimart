@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if site_settings %}{{ site_settings.site_name }}{% else %}UniMart - Comrades Plug{% endif %}</title>
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Styles */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links a i {
+            font-size: 1.1rem;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .nav-links a.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .cart-icon {
+            position: relative;
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff4757;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero h1 i {
+            margin-right: 0.5rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0.95;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 0 2rem;
+        }
+
+        /* Pagination Top Bar */
+        .pagination-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            margin: 1rem 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .pagination-info {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .pagination-info i {
+            color: #667eea;
+            margin-right: 0.3rem;
+        }
+
+        .pagination-controls {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .page-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+            color: #666;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            min-width: 40px;
+        }
+
+        .page-btn:hover:not(.disabled) {
+            border-color: #667eea;
+            color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .page-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-color: transparent;
+            color: white;
+        }
+
+        .page-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .page-btn i {
+            font-size: 0.9rem;
+        }
+
+        /* Products Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            padding: 2rem 0;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-image {
+            position: relative;
+            overflow: hidden;
+            height: 250px;
+        }
+
+        .card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .card:hover img {
+            transform: scale(1.1);
+        }
+
+        .card-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: linear-gradient(135deg, #ff6b6b, #ff4757);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(255, 71, 87, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .card-badge i {
+            font-size: 0.8rem;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .card p {
+            color: #666;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .price-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .price {
+            color: #667eea;
+            font-weight: 700;
+            font-size: 1.3rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .price i {
+            font-size: 1rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .add-to-cart {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .add-to-cart i {
+            font-size: 0.9rem;
+        }
+
+        .add-to-cart:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            grid-column: 1 / -1;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state p {
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        /* Footer */
+        .footer {
+            background: #2c3e50;
+            color: white;
+            margin-top: 4rem;
+            padding: 3rem 2rem 1rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .footer-section ul li i {
+            margin-right: 0.5rem;
+            width: 1.2rem;
+            color: #667eea;
+        }
+
+        .footer-section a {
+            color: #ecf0f1;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .footer-section a:hover {
+            color: #667eea;
+        }
+
+        .footer-section a i {
+            margin-right: 0.5rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            transform: translateY(-3px);
+        }
+
+        .social-links a i {
+            font-size: 1.2rem;
+            margin: 0;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            color: #bdc3c7;
+        }
+
+        .footer-bottom i {
+            color: #ff6b6b;
+            margin: 0 0.2rem;
+        }
+
+        .footer-bottom a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .footer-bottom a:hover {
+            text-decoration: underline;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                justify-content: center;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+
+            .pagination-bar {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .pagination-controls {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <nav class="nav-container">
+            
+            <div class="nav-links">
+                <a href="{% url 'store:home' %}" class="{% if request.path == '/' %}active{% endif %}">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                <a href="{% url 'store:products' %}" class="{% if 'products' in request.path %}active{% endif %}">
+                    <i class="fas fa-box"></i> Products
+                </a>
+                <a href="{% url 'store:categories' %}" class="{% if 'categories' in request.path %}active{% endif %}">
+                    <i class="fas fa-list"></i> Categories
+                </a>
+                <a href="{% url 'store:deals' %}" class="{% if 'deals' in request.path %}active{% endif %}">
+                    <i class="fas fa-tag"></i> Deals
+                </a>
+                <a href="{% url 'store:about' %}" class="{% if 'about' in request.path %}active{% endif %}">
+                    <i class="fas fa-info-circle"></i> About
+                </a>
+                <a href="{% url 'store:contact' %}" class="{% if 'contact' in request.path %}active{% endif %}">
+                    <i class="fas fa-envelope"></i> Contact
+                </a>
+                <a href="{% url 'store:cart' %}" class="cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-badge">{{ cart_items_count|default:'0' }}</span>
+                </a>
+                <a href="{% url 'store:account' %}" class="{% if 'account' in request.path %}active{% endif %}">
+                    <i class="fas fa-user"></i> Profile
+                </a>
+                
+                {% if user.is_authenticated and user.is_staff %}
+                <a href="{% url 'store:admin_dashboard' %}" class="{% if 'dashboard' in request.path %}active{% endif %}" style="background: #f39c12; color: white;">
+                    <i class="fas fa-cog"></i> Admin
+                </a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>
+            <i class="fas fa-graduation-cap"></i>
+            Welcome to {% if site_settings %}{{ site_settings.site_name }}{% else %}UniMart{% endif %}
+        </h1>
+        <p>{{ site_settings.hero_text|default:"Discover amazing products for your school, house and office needs. Quality items at student-friendly prices!" }}</p>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Pagination -->
+        {% if products.paginator.num_pages > 1 %}
+        <div class="pagination-bar">
+            <div class="pagination-info">
+                <i class="fas fa-box"></i>
+                Showing {{ products.start_index }}-{{ products.end_index }} of {{ products.paginator.count }} products
+            </div>
+            <div class="pagination-controls">
+                {% if products.has_previous %}
+                <a href="?page={{ products.previous_page_number }}" class="page-btn">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+                {% else %}
+                <span class="page-btn disabled">
+                    <i class="fas fa-chevron-left"></i>
+                </span>
+                {% endif %}
+
+                {% for i in products.paginator.page_range %}
+                    {% if products.number == i %}
+                    <span class="page-btn active">{{ i }}</span>
+                    {% elif i > products.number|add:'-3' and i < products.number|add:'3' %}
+                    <a href="?page={{ i }}" class="page-btn">{{ i }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if products.has_next %}
+                <a href="?page={{ products.next_page_number }}" class="page-btn">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+                {% else %}
+                <span class="page-btn disabled">
+                    <i class="fas fa-chevron-right"></i>
+                </span>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Products Grid -->
+        <div class="grid">
+            {% for product in products %}
+                <div class="card">
+                    <div class="card-image">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                        {% else %}
+                            <div style="background: #f0f0f0; height: 100%; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-image" style="font-size: 3rem; color: #999;"></i>
+                            </div>
+                        {% endif %}
+                        {% if product.is_new %}
+                        <span class="card-badge">
+                            <i class="fas fa-star"></i> New
+                        </span>
+                        {% endif %}
+                    </div>
+                    <div class="card-content">
+                        <h3>{{ product.name }}</h3>
+                        <p>{{ product.description|truncatechars:100 }}</p>
+                        <div class="price-section">
+                            <span class="price">
+                                <i class="fas fa-coins"></i> Ksh {{ product.price }}
+                            </span>
+                            <button class="add-to-cart" data-product-id="{{ product.id }}">
+                                <i class="fas fa-cart-plus"></i> Add
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="empty-state">
+                    <i class="fas fa-shopping-bag"></i>
+                    <p>No products available at the moment. Check back soon!</p>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Bottom Pagination -->
+        {% if products.paginator.num_pages > 1 %}
+        <div class="pagination-bar">
+            <div class="pagination-info">
+                <i class="fas fa-box"></i>
+                Showing {{ products.start_index }}-{{ products.end_index }} of {{ products.paginator.count }} products
+            </div>
+            <div class="pagination-controls">
+                {% if products.has_previous %}
+                <a href="?page={{ products.previous_page_number }}" class="page-btn">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+                {% else %}
+                <span class="page-btn disabled">
+                    <i class="fas fa-chevron-left"></i>
+                </span>
+                {% endif %}
+
+                {% for i in products.paginator.page_range %}
+                    {% if products.number == i %}
+                    <span class="page-btn active">{{ i }}</span>
+                    {% elif i > products.number|add:'-3' and i < products.number|add:'3' %}
+                    <a href="?page={{ i }}" class="page-btn">{{ i }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if products.has_next %}
+                <a href="?page={{ products.next_page_number }}" class="page-btn">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+                {% else %}
+                <span class="page-btn disabled">
+                    <i class="fas fa-chevron-right"></i>
+                </span>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3><i class="fas fa-store"></i> About {% if site_settings %}{{ site_settings.site_name }}{% else %}UniMart{% endif %}</h3>
+                <p>{{ site_settings.about_text|default:"Your one-stop shop for all products. We offer quality items at affordable prices for students and staff." }}</p>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/phil.anth.ropist"><i class="fab fa-instagram"></i></a>
+                    <a href="https://x.com/jean__marie_"><i class="fab fa-twitter"></i></a>
+                    <a href="https://wa.me/254743874690"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h3><i class="fas fa-link"></i> Quick Links</h3>
+                <ul>
+                    <li><a href="{% url 'store:about' %}"><i class="fas fa-chevron-right"></i> About Us</a></li>
+                    <li><a href="{% url 'store:contact' %}"><i class="fas fa-chevron-right"></i> Contact Us</a></li>
+                    <li><a href="{% url 'store:faq' %}"><i class="fas fa-chevron-right"></i> FAQ</a></li>
+                    <li><a href="{% url 'store:shipping' %}"><i class="fas fa-chevron-right"></i> Shipping Info</a></li>
+                    <li><a href="{% url 'store:returns' %}"><i class="fas fa-chevron-right"></i> Returns Policy</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3><i class="fas fa-tags"></i> Categories</h3>
+                <ul>
+                    {% for category in categories|slice:":6" %}
+                        {% if category.slug %}
+                        <li><a href="{% url 'store:category_detail' category.slug %}"><i class="{{ category.icon|default:'fas fa-folder' }}"></i> {{ category.name }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3><i class="fas fa-address-card"></i> Contact Info</h3>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> {{ site_settings.contact_address|default:"Mama Ngina University" }}</li>
+                    <li><i class="fas fa-phone-alt"></i> {{ site_settings.contact_phone|default:"+2547 4387 4690" }}</li>
+                    <li><i class="fas fa-envelope"></i> {{ site_settings.contact_email|default:"info@unimart.ac.ke" }}</li>
+                    <li><i class="fas fa-clock"></i> {{ site_settings.business_hours|default:"Mon-Fri: 8am - 6pm" }}</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; {% now "Y" %} {% if site_settings %}{{ site_settings.site_name }}{% else %}UniMart{% endif %}. All rights reserved. | Designed with <i class="fas fa-heart"></i> for comrades</p>
+            <p>Maintained by <a href="{{ site_settings.maintainer_url|default:'https://okalmjohn.netlify.app' }}" target="_blank">{{ site_settings.maintainer_name|default:'Jean Marie' }}</a></p>
+        </div>
+    </footer>
+
+    <script>
+        // Get CSRF token for AJAX requests
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrftoken = getCookie('csrftoken');
+
+        // Add smooth scrolling for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add active class to current navigation link
+        const currentLocation = window.location.pathname;
+        const navLinks = document.querySelectorAll('.nav-links a');
+        
+        navLinks.forEach(link => {
+            if (link.getAttribute('href') === currentLocation) {
+                link.classList.add('active');
+            }
+        });
+
+        // Update cart badge
+        function updateCartBadge(count) {
+            const badge = document.querySelector('.cart-badge');
+            if (badge) {
+                badge.textContent = count;
+            }
+        }
+
+        // Add to cart functionality
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+            button.addEventListener('click', function() {
+                const productId = this.dataset.productId;
+                
+                fetch("{% url 'store:add_to_cart' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken
+                    },
+                    body: JSON.stringify({ product_id: productId, quantity: 1 })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update cart badge
+                        const badge = document.querySelector('.cart-badge');
+                        badge.textContent = data.cart_count;
+                        
+                        // Show feedback
+                        const originalText = this.innerHTML;
+                        this.innerHTML = '<i class="fas fa-check"></i> Added';
+                        this.style.background = '#27ae60';
+                        
+                        setTimeout(() => {
+                            this.innerHTML = originalText;
+                            this.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
+                        }, 2000);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - UniMart</title>
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Styles */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links a i {
+            font-size: 1.1rem;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .nav-links a.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .cart-icon {
+            position: relative;
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff4757;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.1"><path fill="white" d="M20 20 L30 20 L25 30 Z M70 50 L80 50 L75 60 Z M30 70 L40 70 L35 80 Z"/></svg>');
+            background-size: 50px;
+            animation: moveBackground 20s linear infinite;
+        }
+
+        @keyframes moveBackground {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero h1 i {
+            margin-right: 0.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            line-height: 1.6;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 2rem;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            color: white;
+        }
+
+        .breadcrumb a {
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .breadcrumb a:hover {
+            opacity: 1;
+        }
+
+        .breadcrumb span {
+            opacity: 0.5;
+        }
+
+        /* Contact Grid */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Contact Info Cards */
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
+        }
+
+        .info-card:hover::before {
+            width: 6px;
+        }
+
+        .info-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-icon i {
+            font-size: 2rem;
+            color: white;
+        }
+
+        .info-card h3 {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .info-card p {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-card p i {
+            color: #667eea;
+            width: 20px;
+        }
+
+        .info-card .small-text {
+            font-size: 0.9rem;
+            color: #999;
+            margin-top: 0.5rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            transform: translateY(-3px);
+        }
+
+        .social-links a i {
+            font-size: 1.2rem;
+            margin: 0;
+        }
+
+        /* Contact Form */
+        .contact-form-container {
+            background: white;
+            border-radius: 30px;
+            padding: 2.5rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .form-header h2 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .form-header h2 i {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .form-header p {
+            color: #666;
+        }
+
+        .contact-form {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #667eea;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .form-group.textarea i {
+            top: 1.5rem;
+            transform: none;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem 1rem 1rem 2.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-control:focus + i {
+            color: #764ba2;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        textarea.form-control {
+            height: 150px;
+            resize: vertical;
+            padding-top: 1.5rem;
+        }
+
+        .error-message {
+            color: #ff4757;
+            font-size: 0.85rem;
+            margin-top: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .error-message i {
+            font-size: 0.8rem;
+        }
+
+        .form-control.error {
+            border-color: #ff4757;
+        }
+
+        .form-control.error:focus {
+            box-shadow: 0 0 0 4px rgba(255, 71, 87, 0.1);
+        }
+
+        .form-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .btn-submit i {
+            font-size: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-submit:hover i {
+            transform: translateX(5px);
+        }
+
+        .required-note {
+            color: #999;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .required-note .required-star {
+            color: #ff4757;
+        }
+
+        /* Success Message */
+        .success-message {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+            padding: 1rem;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            animation: slideDown 0.5s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .success-message i {
+            font-size: 1.5rem;
+        }
+
+        .success-message .close-btn {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .success-message .close-btn:hover {
+            opacity: 1;
+        }
+
+        /* Map Section */
+        .map-section {
+            background: white;
+            border-radius: 30px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .map-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .map-header h3 {
+            font-size: 1.3rem;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .map-header h3 i {
+            color: #667eea;
+        }
+
+        .map-directions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .map-directions:hover {
+            gap: 1rem;
+            color: #764ba2;
+        }
+
+        .map-container {
+            border-radius: 15px;
+            overflow: hidden;
+            height: 350px;
+            position: relative;
+        }
+
+        .map-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .map-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.8;
+        }
+
+        .map-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(102, 126, 234, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 1rem;
+            backdrop-filter: blur(3px);
+        }
+
+        .map-marker {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            animation: bounce 2s infinite;
+        }
+
+        .map-overlay p {
+            color: white;
+            font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.5);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+        }
+
+        /* Business Hours */
+        .hours-section {
+            background: white;
+            border-radius: 30px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .hours-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .hours-header h3 {
+            font-size: 1.5rem;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .hours-header h3 i {
+            color: #667eea;
+        }
+
+        .hours-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .hour-card {
+            text-align: center;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .hour-card:hover {
+            transform: translateY(-5px);
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .hour-card:hover .day,
+        .hour-card:hover .time,
+        .hour-card:hover .icon {
+            color: white;
+        }
+
+        .hour-card .icon {
+            font-size: 2rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .hour-card .day {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .hour-card .time {
+            color: #666;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .hour-card .badge {
+            display: inline-block;
+            margin-top: 0.5rem;
+            padding: 0.2rem 0.5rem;
+            background: #27ae60;
+            color: white;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            margin-top: 3rem;
+        }
+
+        .faq-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .faq-header h3 {
+            font-size: 1.5rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
+        }
+
+        .faq-question {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .faq-question i {
+            width: 30px;
+            height: 30px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #667eea;
+        }
+
+        .faq-question h4 {
+            color: #333;
+            font-size: 1rem;
+        }
+
+        .faq-answer {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-left: 2.5rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: #2c3e50;
+            color: white;
+            margin-top: 4rem;
+            padding: 3rem 2rem 1rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section ul li i {
+            margin-right: 0.5rem;
+            width: 1.2rem;
+            color: #667eea;
+        }
+
+        .footer-section a {
+            color: #ecf0f1;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .footer-section a:hover {
+            color: #667eea;
+        }
+
+        .footer-section a i {
+            margin-right: 0.5rem;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            color: #bdc3c7;
+        }
+
+        .footer-bottom i {
+            color: #ff6b6b;
+            margin: 0 0.2rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 968px) {
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .hours-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .map-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <nav class="nav-container">
+            <!-- <div class="logo">
+                <i class="fas fa-book-open logo-icon"></i>
+                <span class="logo-text">UniMart</span>
+            </div>
+             -->
+            <div class="nav-links">
+                <a href="/">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                <a href="/products/">
+                    <i class="fas fa-box"></i> Products
+                </a>
+                <a href="/categories/">
+                    <i class="fas fa-list"></i> Categories
+                </a>
+                <a href="/deals/">
+                    <i class="fas fa-tag"></i> Deals
+                </a>
+                <a href="/about/">
+                    <i class="fas fa-info-circle"></i> About
+                </a>
+                <a href="/contact/" class="active">
+                    <i class="fas fa-envelope"></i> Contact
+                </a>
+                <a href="/cart/" class="cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-badge"> {{ cart_items_count|default:'0' }} </span>
+                </a>
+                <a href="/account/">
+                    <i class="fas fa-user"></i> Account
+                </a>
+                {% if user.is_authenticated and user.is_staff %}
+                <a href="{% url 'store:admin_dashboard' %}" class="{% if 'dashboard' in request.path %}active{% endif %}" style="background: #f39c12; color: white;">
+                    <i class="fas fa-cog"></i> Admin
+                </a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>
+                <i class="fas fa-headset"></i>
+                Get in Touch
+            </h1>
+            <p>We'd love to hear from you! Send us a message and we'll respond as soon as possible.</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+            <a href="/"><i class="fas fa-home"></i> Home</a>
+            <span>/</span>
+            <span><i class="fas fa-envelope"></i> Contact Us</span>
+        </div>
+
+        <!-- Success Message (shown after form submission) -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="success-message" id="successMessage">
+                    <i class="fas fa-check-circle"></i>
+                    <span>{{ message }}</span>
+                    <button class="close-btn" onclick="this.parentElement.remove()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Contact Grid -->
+        <div class="contact-grid">
+            <!-- Contact Information -->
+            <div class="contact-info">
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h3>Visit Us</h3>
+                    <p><i class="fas fa-map-pin"></i> Mama Ngina University</p>
+                    <p><i class="fas fa-building"></i> Tuition Complex, TC 002</p>
+                    <p class="small-text"><i class="fas fa-info-circle"></i> Located next to the Security Office</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-phone-alt"></i>
+                    </div>
+                    <h3>Call Us</h3>
+                    <p><i class="fas fa-phone"></i> <a href="tel:+254743874690">+2547 4387 4690</a></p>
+                    <p><i class="fas fa-phone"></i><a href="tel:+254783845747"> +2547 8384 5747</a></p>
+                    <p class="small-text"><i class="fas fa-clock"></i> Mon-Fri, 8am - 6pm</p>
+                    <div class="social-links">
+                        <a href="https://wa.me/254783845747"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://t.me/ProfJeanMarie"><i class="fab fa-telegram"></i></a>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h3>Email Us</h3>
+                    <p><i class="fas fa-envelope"></i> support@unimart.ac.ke</p>
+                    <p><i class="fas fa-envelope"></i> sales@unimart.ac.ke</p>
+                    <!-- <p><i class="fas fa-envelope"></i> info@unimart.ac.ke</p> -->
+                    <p class="small-text"><i class="fas fa-clock"></i> Response within 24 hours</p>
+                </div>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="contact-form-container">
+                <div class="form-header">
+                    <h2>
+                        <i class="fas fa-paper-plane"></i>
+                        Send Message
+                    </h2>
+                    <p>We'll get back to you within 24 hours</p>
+                </div>
+
+                <form class="contact-form" method="POST" action="{% url 'store:contact' %}" id="contactForm">
+                    {% csrf_token %}
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="firstName" name="first_name" placeholder="First Name" required>
+                            <i class="fas fa-user"></i>
+                            <div class="error-message" id="firstNameError"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="lastName" name="last_name" placeholder="Last Name" required>
+                            <i class="fas fa-user"></i>
+                            <div class="error-message" id="lastNameError"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Email Address" required>
+                        <i class="fas fa-envelope"></i>
+                        <div class="error-message" id="emailError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="tel" class="form-control" id="phone" name="phone" placeholder="Phone Number">
+                        <i class="fas fa-phone"></i>
+                        <div class="error-message" id="phoneError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <select class="form-control" id="subject" name="subject" required>
+                            <option value="" disabled selected>Select Subject</option>
+                            <option value="general">General Inquiry</option>
+                            <option value="order">Order Issue</option>
+                            <option value="product">Product Question</option>
+                            <option value="delivery">Delivery Issue</option>
+                            <option value="feedback">Feedback</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <i class="fas fa-tag"></i>
+                        <div class="error-message" id="subjectError"></div>
+                    </div>
+
+                    <div class="form-group textarea">
+                        <textarea class="form-control" id="message" name="message" placeholder="Your Message" required></textarea>
+                        <i class="fas fa-comment"></i>
+                        <div class="error-message" id="messageError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="studentId" name="student_id" placeholder="Student ID (optional)">
+                        <i class="fas fa-id-card"></i>
+                        <div class="error-message" id="studentIdError"></div>
+                    </div>
+
+                    <div class="form-footer">
+                        <button type="submit" class="btn-submit" id="submitBtn">
+                            <span>Send Message</span>
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                        <div class="required-note">
+                            <span class="required-star">*</span> Required fields
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Business Hours -->
+        <div class="hours-section">
+            <div class="hours-header">
+                <h3>
+                    <i class="fas fa-clock"></i>
+                    Business Hours
+                </h3>
+            </div>
+            <div class="hours-grid">
+                <div class="hour-card">
+                    <div class="icon">
+                        <i class="fas fa-calendar-day"></i>
+                    </div>
+                    <div class="day">Monday - Friday</div>
+                    <div class="time">8:00 AM - 6:00 PM</div>
+                    <span class="badge">Open</span>
+                </div>
+                <div class="hour-card">
+                    <div class="icon">
+                        <i class="fas fa-calendar-day"></i>
+                    </div>
+                    <div class="day">Saturday</div>
+                    <div class="time">9:00 AM - 3:00 PM</div>
+                    <span class="badge">Open</span>
+                </div>
+                <div class="hour-card">
+                    <div class="icon">
+                        <i class="fas fa-calendar-day"></i>
+                    </div>
+                    <div class="day">Sunday</div>
+                    <div class="time">Closed</div>
+                    <span class="badge" style="background: #ff4757;">Closed</span>
+                </div>
+                <div class="hour-card">
+                    <div class="icon">
+                        <i class="fas fa-calendar-day"></i>
+                    </div>
+                    <div class="day">Public Holidays</div>
+                    <div class="time">10:00 AM - 2:00 PM</div>
+                    <span class="badge">Limited</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="faq-section">
+            <div class="faq-header">
+                <h3>
+                    <i class="fas fa-question-circle"></i>
+                    Quick Help
+                </h3>
+            </div>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <i class="fas fa-question"></i>
+                        <h4>How fast is your delivery?</h4>
+                    </div>
+                    <div class="faq-answer">
+                        We deliver within 2-3 hours for campus deliveries. Outside campus, delivery takes 24-48 hours.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <i class="fas fa-question"></i>
+                        <h4>What's your return policy?</h4>
+                    </div>
+                    <div class="faq-answer">
+                        We offer 7-day returns for defective items. Visit our store with your receipt.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <i class="fas fa-question"></i>
+                        <h4>Do you accept M-Pesa?</h4>
+                    </div>
+                    <div class="faq-answer">
+                        Yes! We accept M-Pesa, bank transfer, and cash on delivery.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <i class="fas fa-question"></i>
+                        <h4>Where is your store located?</h4>
+                    </div>
+                    <div class="faq-answer">
+                        We're in the Tuition Complex, TC 002, next to the Security Office.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <div class="footer-content">
+            <!-- <div class="footer-section">
+                <h3><i class="fas fa-store"></i> About UniMart</h3>
+                <p>Your one-stop shop for all products. We offer quality items at affordable prices for students and staff.</p>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/phil.anth.ropist"><i class="fab fa-instagram"></i></a>
+                    <a href="https://x.com/jean__marie_"><i class="fab fa-twitter"></i></a>
+                    <a href="https://wa.me/254743874690"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div> -->
+            <div class="footer-section">
+                <h3><i class="fas fa-store"></i> About {% if site_settings %}{{ site_settings.site_name }}{% else %}UniMart{% endif %}</h3>
+                <p>{{ site_settings.about_text|default:"Your one-stop shop for all products. We offer quality items at affordable prices for students and staff." }}</p>
+                <!-- <div class="social-links">
+
+                    {% if site_settings.facebook %}
+                    <a href="{{ site_settings.facebook }}" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                    {% endif %}
+                    {% if site_settings.instagram %}
+                    <a href="{{ site_settings.instagram }}" target="_blank"><i class="fab fa-instagram"></i></a>
+                    {% endif %}
+                    {% if site_settings.twitter %}
+                    <a href="{{ site_settings.twitter }}" target="_blank"><i class="fab fa-twitter"></i></a>
+                    {% endif %}
+                    {% if site_settings.whatsapp %}
+                    <a href="{{ site_settings.whatsapp }}" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                    {% endif %}
+                </div> -->
+                <div class="social-links">
+                    <a href="https://www.instagram.com/phil.anth.ropist"><i class="fab fa-instagram"></i></a>
+                    <a href="https://x.com/jean__marie_"><i class="fab fa-twitter"></i></a>
+                    <a href="https://wa.me/254743874690"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h3><i class="fas fa-link"></i> Quick Links</h3>
+                <ul>
+                    <li><a href="{% url 'store:about' %}"><i class="fas fa-chevron-right"></i> About Us</a></li>
+                    <li><a href="{% url 'store:contact' %}"><i class="fas fa-chevron-right"></i> Contact Us</a></li>
+                    <li><a href="{% url 'store:faq' %}"><i class="fas fa-chevron-right"></i> FAQ</a></li>
+                    <li><a href="{% url 'store:shipping' %}"><i class="fas fa-chevron-right"></i> Shipping Info</a></li>
+                    <li><a href="{% url 'store:returns' %}"><i class="fas fa-chevron-right"></i> Returns Policy</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3><i class="fas fa-tags"></i> Categories</h3>
+                <ul>
+                    {% for category in categories|slice:":6" %}
+                        {% if category.slug %}
+                        <li><a href="{% url 'store:category_detail' category.slug %}"><i class="{{ category.icon|default:'fas fa-folder' }}"></i> {{ category.name }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3><i class="fas fa-address-card"></i> Contact Info</h3>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> {{ site_settings.contact_address|default:"Mama Ngina University" }}</li>
+                    <li><i class="fas fa-phone-alt"></i> {{ site_settings.contact_phone|default:"+2547 4387 4690" }}</li>
+                    <li><i class="fas fa-envelope"></i> {{ site_settings.contact_email|default:"info@unimart.ac.ke" }}</li>
+                    <li><i class="fas fa-clock"></i> {{ site_settings.business_hours|default:"Mon-Fri: 8am - 6pm" }}</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; {% now "Y" %} {% if site_settings %}{{ site_settings.site_name }}{% else %}UniMart{% endif %}. All rights reserved. | Designed with <i class="fas fa-heart"></i> for comrades</p>
+            <p>Maintained by <a href="{{ site_settings.maintainer_url|default:'https://okalmjohn.netlify.app' }}" target="_blank">{{ site_settings.maintainer_name|default:'Jean Marie' }}</a></p>
+        </div>
+    </footer>
+
+    <script>
+        // Form validation
+        document.getElementById('contactForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Reset errors
+            document.querySelectorAll('.error-message').forEach(el => el.innerHTML = '');
+            document.querySelectorAll('.form-control').forEach(el => el.classList.remove('error'));
+            
+            let isValid = true;
+            
+            // Get form values
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value.trim();
+            
+            // Validate first name
+            if (!firstName) {
+                document.getElementById('firstNameError').innerHTML = '<i class="fas fa-exclamation-circle"></i> First name is required';
+                document.getElementById('firstName').classList.add('error');
+                isValid = false;
+            }
+            
+            // Validate last name
+            if (!lastName) {
+                document.getElementById('lastNameError').innerHTML = '<i class="fas fa-exclamation-circle"></i> Last name is required';
+                document.getElementById('lastName').classList.add('error');
+                isValid = false;
+            }
+            
+            // Validate email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!email) {
+                document.getElementById('emailError').innerHTML = '<i class="fas fa-exclamation-circle"></i> Email is required';
+                document.getElementById('email').classList.add('error');
+                isValid = false;
+            } else if (!emailRegex.test(email)) {
+                document.getElementById('emailError').innerHTML = '<i class="fas fa-exclamation-circle"></i> Please enter a valid email';
+                document.getElementById('email').classList.add('error');
+                isValid = false;
+            }
+            
+            // Validate subject
+            if (!subject) {
+                document.getElementById('subjectError').innerHTML = '<i class="fas fa-exclamation-circle"></i> Please select a subject';
+                document.getElementById('subject').classList.add('error');
+                isValid = false;
+            }
+            
+            // Validate message
+            if (!message) {
+                document.getElementById('messageError').innerHTML = '<i class="fas fa-exclamation-circle"></i> Message is required';
+                document.getElementById('message').classList.add('error');
+                isValid = false;
+            } else if (message.length < 10) {
+                document.getElementById('messageError').innerHTML = '<i class="fas fa-exclamation-circle"></i> Message must be at least 10 characters';
+                document.getElementById('message').classList.add('error');
+                isValid = false;
+            }
+            
+            // If form is valid, submit
+            if (isValid) {
+                const btn = document.getElementById('submitBtn');
+                const originalText = btn.innerHTML;
+                
+                // Show loading state
+                btn.innerHTML = '<span>Sending...</span> <i class="fas fa-spinner fa-spin"></i>';
+                btn.disabled = true;
+                
+                // Simulate form submission (replace with actual fetch)
+                setTimeout(() => {
+                    // Show success message
+                    const successDiv = document.createElement('div');
+                    successDiv.className = 'success-message';
+                    successDiv.innerHTML = `
+                        <i class="fas fa-check-circle"></i>
+                        <span>Message sent successfully! We'll get back to you soon.</span>
+                        <button class="close-btn" onclick="this.parentElement.remove()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+                    
+                    const formContainer = document.querySelector('.contact-form-container');
+                    formContainer.insertBefore(successDiv, formContainer.firstChild);
+                    
+                    // Reset form
+                    document.getElementById('contactForm').reset();
+                    
+                    // Reset button
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    
+                    // Scroll to success message
+                    successDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 1500);
+            }
+        });
+
+        // Real-time validation
+        document.querySelectorAll('.form-control').forEach(input => {
+            input.addEventListener('blur', function() {
+                if (this.value.trim() === '' && this.hasAttribute('required')) {
+                    const errorDiv = this.parentElement.querySelector('.error-message');
+                    if (errorDiv) {
+                        errorDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> This field is required';
+                        this.classList.add('error');
+                    }
+                } else {
+                    const errorDiv = this.parentElement.querySelector('.error-message');
+                    if (errorDiv) {
+                        errorDiv.innerHTML = '';
+                        this.classList.remove('error');
+                    }
+                }
+            });
+
+            input.addEventListener('input', function() {
+                if (this.value.trim() !== '') {
+                    const errorDiv = this.parentElement.querySelector('.error-message');
+                    if (errorDiv) {
+                        errorDiv.innerHTML = '';
+                        this.classList.remove('error');
+                    }
+                }
+            });
+        });
+
+        // Email validation on input
+        document.getElementById('email')?.addEventListener('input', function() {
+            const email = this.value.trim();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const errorDiv = this.parentElement.querySelector('.error-message');
+            
+            if (email && !emailRegex.test(email)) {
+                errorDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please enter a valid email';
+                this.classList.add('error');
+            } else {
+                errorDiv.innerHTML = '';
+                this.classList.remove('error');
+            }
+        });
+
+        // Message length validation
+        document.getElementById('message')?.addEventListener('input', function() {
+            const message = this.value.trim();
+            const errorDiv = this.parentElement.querySelector('.error-message');
+            
+            if (message && message.length < 10) {
+                errorDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> Message must be at least 10 characters';
+                this.classList.add('error');
+            } else {
+                errorDiv.innerHTML = '';
+                this.classList.remove('error');
+            }
+        });
+
+        // Auto-hide success message after 5 seconds
+        setTimeout(() => {
+            const successMessage = document.getElementById('successMessage');
+            if (successMessage) {
+                successMessage.style.opacity = '0';
+                successMessage.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => successMessage.remove(), 500);
+            }
+        }, 5000);
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add active class to current navigation link
+        const currentLocation = window.location.pathname;
+        const navLinks = document.querySelectorAll('.nav-links a');
+        
+        navLinks.forEach(link => {
+            if (link.getAttribute('href') === currentLocation) {
+                link.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

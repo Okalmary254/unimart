@@ -1,0 +1,115 @@
+{% extends 'store/admin/base.html' %}
+{% load humanize %}
+
+{% block title %}Sales Reports - MNU Store Admin{% endblock %}
+{% block page_icon %}fas fa-chart-line{% endblock %}
+{% block page_title %}Sales Reports{% endblock %}
+
+{% block content %}
+<!-- Date Range Filter -->
+<div style="background: #f8f9fa; padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem;">
+    <form method="get" style="display: flex; gap: 1rem; align-items: flex-end;">
+        <div>
+            <label style="display: block; margin-bottom: 0.5rem; color: #333;">From Date</label>
+            <input type="date" name="from" class="form-control" value="{{ date_from }}" style="width: 200px;">
+        </div>
+        <div>
+            <label style="display: block; margin-bottom: 0.5rem; color: #333;">To Date</label>
+            <input type="date" name="to" class="form-control" value="{{ date_to }}" style="width: 200px;">
+        </div>
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-filter"></i> Apply Filter
+        </button>
+    </form>
+</div>
+
+<!-- Summary Cards -->
+<div class="stats-grid" style="grid-template-columns: repeat(3, 1fr);">
+    <div class="stat-card">
+        <div class="stat-icon" style="background: #667eea;">
+            <i class="fas fa-shopping-bag"></i>
+        </div>
+        <div class="stat-info">
+            <h3>{{ total_orders }}</h3>
+            <p>Total Orders</p>
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-icon" style="background: #27ae60;">
+            <i class="fas fa-money-bill-wave"></i>
+        </div>
+        <div class="stat-info">
+            <h3>Ksh {{ total_revenue|floatformat:2|intcomma }}</h3>
+            <p>Total Revenue</p>
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-icon" style="background: #f39c12;">
+            <i class="fas fa-calculator"></i>
+        </div>
+        <div class="stat-info">
+            <h3>Ksh {{ avg_order_value|floatformat:2|intcomma }}</h3>
+            <p>Average Order Value</p>
+        </div>
+    </div>
+</div>
+
+<!-- Top Products -->
+<div style="margin-top: 2rem; background: white; border-radius: 10px; padding: 1.5rem;">
+    <h3 style="margin-bottom: 1.5rem; color: #333;"><i class="fas fa-crown" style="color: #f39c12; margin-right: 0.5rem;"></i> Top Selling Products</h3>
+    
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Units Sold</th>
+                    <th>Revenue</th>
+                    <th>% of Sales</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in top_products %}
+                <tr>
+                    <td><strong>{{ product.product__name }}</strong></td>
+                    <td>{{ product.total_sold }}</td>
+                    <td>Ksh {{ product.total_revenue|floatformat:2|intcomma }}</td>
+                    <td>
+                        {% widthratio product.total_revenue total_revenue 100 %}%
+                        <div style="width: 100px; height: 6px; background: #e0e0e0; border-radius: 3px; margin-top: 0.3rem;">
+                            <div style="width: {% widthratio product.total_revenue total_revenue 100 %}px; height: 6px; background: #667eea; border-radius: 3px;"></div>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" style="text-align: center; padding: 2rem;">No sales data for this period</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Export Options -->
+<div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: flex-end;">
+    <button class="btn btn-success" onclick="exportReport('csv')">
+        <i class="fas fa-file-csv"></i> Export as CSV
+    </button>
+    <button class="btn btn-danger" onclick="exportReport('pdf')">
+        <i class="fas fa-file-pdf"></i> Export as PDF
+    </button>
+    <button class="btn btn-primary" onclick="window.print()">
+        <i class="fas fa-print"></i> Print Report
+    </button>
+</div>
+
+<script>
+function exportReport(format) {
+    // Add export logic here
+    alert('Exporting as ' + format.toUpperCase() + '...');
+}
+</script>
+{% endblock %}

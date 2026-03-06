@@ -1,0 +1,173 @@
+{% extends 'store/admin/base.html' %}
+{% load humanize %}
+
+{% block title %}Dashboard - UniMart Admin{% endblock %}
+{% block page_icon %}fas fa-chart-pie{% endblock %}
+{% block page_title %}Dashboard Overview{% endblock %}
+
+{% block content %}
+<!-- Stats Cards -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i class="fas fa-box"></i>
+        </div>
+        <div class="stat-info">
+            <h3>{{ total_products }}</h3>
+            <p>Total Products</p>
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i class="fas fa-list"></i>
+        </div>
+        <div class="stat-info">
+            <h3>{{ total_categories }}</h3>
+            <p>Categories</p>
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i class="fas fa-shopping-bag"></i>
+        </div>
+        <div class="stat-info">
+            <h3>{{ total_orders }}</h3>
+            <p>Total Orders</p>
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i class="fas fa-envelope"></i>
+        </div>
+        <div class="stat-info">
+            <h3>{{ total_messages }}</h3>
+            <p>Unread Messages</p>
+        </div>
+    </div>
+</div>
+
+<!-- Today's Stats -->
+<div class="stats-grid" style="grid-template-columns: repeat(3, 1fr);">
+    <div class="stat-card">
+        <div class="stat-icon" style="background: #27ae60;">
+            <i class="fas fa-shopping-cart"></i>
+        </div>
+        <div class="stat-info">
+            <h3>{{ today_orders }}</h3>
+            <p>Today's Orders</p>
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-icon" style="background: #f39c12;">
+            <i class="fas fa-money-bill-wave"></i>
+        </div>
+        <div class="stat-info">
+            <h3>Ksh {{ today_revenue|floatformat:2|intcomma }}</h3>
+            <p>Today's Revenue</p>
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-icon" style="background: #e74c3c;">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <div class="stat-info">
+            <h3>{{ low_stock }}</h3>
+            <p>Low Stock Items</p>
+        </div>
+    </div>
+</div>
+
+<!-- Monthly Stats -->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem;">
+    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 10px;">
+        <h3 style="margin-bottom: 1rem; color: #333;"><i class="fas fa-calendar-alt" style="color: #667eea; margin-right: 0.5rem;"></i> Monthly Summary</h3>
+        <div style="display: flex; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid #e0e0e0;">
+            <span style="color: #666;">Total Orders:</span>
+            <span style="font-weight: 600; color: #333;">{{ monthly_orders }}</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid #e0e0e0;">
+            <span style="color: #666;">Total Revenue:</span>
+            <span style="font-weight: 600; color: #27ae60;">Ksh {{ monthly_revenue|floatformat:2|intcomma }}</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; padding: 1rem 0;">
+            <span style="color: #666;">Average Order Value:</span>
+            <span style="font-weight: 600; color: #333;">Ksh {% widthratio monthly_revenue monthly_orders 1 %} (est.)</span>
+        </div>
+    </div>
+    
+    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 10px;">
+        <h3 style="margin-bottom: 1rem; color: #333;"><i class="fas fa-clock" style="color: #667eea; margin-right: 0.5rem;"></i> Quick Actions</h3>
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <a href="{% url 'store:admin_product_add' %}" class="btn btn-primary" style="justify-content: center;">
+                <i class="fas fa-plus"></i> Add New Product
+            </a>
+            <a href="{% url 'store:admin_category_add' %}" class="btn btn-outline" style="justify-content: center;">
+                <i class="fas fa-folder-plus"></i> Add New Category
+            </a>
+            <a href="{% url 'store:admin_deals_add' %}" class="btn btn-success" style="justify-content: center;">
+                <i class="fas fa-tag"></i> Create New Deal
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Orders -->
+<div style="margin-top: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h3 style="color: #333;"><i class="fas fa-history" style="color: #667eea; margin-right: 0.5rem;"></i> Recent Orders</h3>
+        <a href="{% url 'store:admin_orders' %}" class="btn btn-outline btn-sm">View All <i class="fas fa-arrow-right"></i></a>
+    </div>
+    
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>Order #</th>
+                    <th>Customer</th>
+                    <th>Date</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in recent_orders %}
+                <tr>
+                    <td>#{{ order.order_number }}</td>
+                    <td>{{ order.user.get_full_name|default:order.user.username }}</td>
+                    <td>{{ order.created_at|date:"M d, Y H:i" }}</td>
+                    <td><strong>Ksh {{ order.total|floatformat:2|intcomma }}</strong></td>
+                    <td>
+                        <span style="display: inline-block; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; 
+                            {% if order.status == 'delivered' %}background: #d4edda; color: #155724;
+                            {% elif order.status == 'shipped' %}background: #cce5ff; color: #004085;
+                            {% elif order.status == 'processing' %}background: #fff3cd; color: #856404;
+                            {% elif order.status == 'cancelled' %}background: #f8d7da; color: #721c24;
+                            {% endif %}">
+                            {{ order.get_status_display }}
+                        </span>
+                    </td>
+                    <td>
+                        <a href="{% url 'store:admin_order_detail' order.id %}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-eye"></i> View
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 2rem;">
+                        <i class="fas fa-shopping-bag" style="font-size: 2rem; color: #ccc; margin-bottom: 0.5rem; display: block;"></i>
+                        No orders yet
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

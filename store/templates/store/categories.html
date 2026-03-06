@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <title>Categories - MNU Online Store</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Styles */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Enhanced Navigation with Dropdown */
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-links > li {
+            list-style: none;
+            position: relative;
+        }
+
+        .nav-links > li > a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links > li > a i {
+            font-size: 1.1rem;
+        }
+
+        .nav-links > li > a:hover {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .nav-links > li > a.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        /* Dropdown Menu */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            min-width: 220px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            padding: 0.5rem 0;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            list-style: none;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-menu li {
+            list-style: none;
+        }
+
+        .dropdown-menu a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: #333;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .dropdown-menu a:hover {
+            background: linear-gradient(135deg, #667eea10, #764ba210);
+            color: #667eea;
+            padding-left: 2rem;
+        }
+
+        .dropdown-menu i {
+            font-size: 1.2rem;
+            min-width: 24px;
+            color: #667eea;
+        }
+
+        /* Cart Icon */
+        .cart-icon {
+            position: relative;
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff4757;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero h1 i {
+            margin-right: 0.5rem;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0.95;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 2rem;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            color: white;
+        }
+
+        .breadcrumb a {
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .breadcrumb a:hover {
+            opacity: 1;
+        }
+
+        .breadcrumb span {
+            opacity: 0.5;
+        }
+
+        /* Category Header */
+        .category-header {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .category-icon-large {
+            font-size: 4rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .category-info h2 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .category-info p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .category-info small {
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            background: white;
+            border-radius: 15px;
+            padding: 1rem 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-options {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            padding: 0.5rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-select:hover {
+            border-color: #667eea;
+        }
+
+        .results-count {
+            color: #666;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .results-count i {
+            color: #667eea;
+        }
+
+        /* Products Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-image {
+            position: relative;
+            overflow: hidden;
+            height: 200px;
+        }
+
+        .card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .card:hover img {
+            transform: scale(1.1);
+        }
+
+        .card-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: linear-gradient(135deg, #ff6b6b, #ff4757);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(255, 71, 87, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .card-badge i {
+            font-size: 0.8rem;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .card p {
+            color: #666;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .price-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .price {
+            color: #667eea;
+            font-weight: 700;
+            font-size: 1.3rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .price i {
+            font-size: 1rem;
+        }
+
+        .add-to-cart {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .add-to-cart:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .add-to-cart i {
+            font-size: 0.9rem;
+        }
+
+        /* Category Navigation Cards */
+        .category-nav {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .category-nav-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .category-nav-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .category-nav-card i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+            color: #667eea;
+        }
+
+        .category-nav-card:hover i {
+            color: white;
+        }
+
+        .category-nav-card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .category-nav-card p {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .category-nav-card:hover p {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .category-nav-card small {
+            font-size: 0.8rem;
+            color: #999;
+        }
+
+        .category-nav-card:hover small {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            grid-column: 1 / -1;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .empty-state p {
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+
+        .empty-state .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .empty-state .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            margin-top: 4rem;
+            padding: 3rem 2rem 1rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section ul li i {
+            margin-right: 0.5rem;
+            width: 1.2rem;
+            color: #667eea;
+        }
+
+        .footer-section a {
+            color: #ecf0f1;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .footer-section a:hover {
+            color: #667eea;
+        }
+
+        .footer-section a i {
+            margin-right: 0.5rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            transform: translateY(-3px);
+        }
+
+        .social-links a i {
+            font-size: 1.2rem;
+            margin: 0;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            color: #bdc3c7;
+        }
+
+        .footer-bottom i {
+            color: #ff6b6b;
+            margin: 0 0.2rem;
+        }
+
+        /* Footer section specific */
+        .footer-section:first-child p {
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            color: #bdc3c7;
+        }
+
+        /* Footer bottom */
+        .footer-bottom a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer-bottom a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-section {
+                text-align: center;
+            }
+            
+            .footer-section ul li {
+                justify-content: center;
+            }
+            
+            .social-links {
+                justify-content: center;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card, .category-nav-card {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .category-dropdown:hover .dropdown-menu {
+            opacity: 1 !important;
+            visibility: visible !important;
+            transform: translateX(-50%) translateY(10px) !important;
+        }
+        
+        .dropdown-toggle:hover {
+            background: rgba(255, 255, 255, 0.3) !important;
+            transform: translateY(-2px);
+        }
+        
+        .dropdown-menu a:hover {
+            background: linear-gradient(135deg, #667eea10, #764ba210);
+            padding-left: 2rem !important;
+        }
+        
+        .dropdown-menu a:last-child:hover {
+            background: linear-gradient(135deg, #667eea20, #764ba220);
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(10px);
+            }
+        }
+        
+        .category-dropdown:hover .dropdown-menu {
+            animation: slideDown 0.3s ease forwards;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with Dropdown -->
+    <header class="header">
+        <nav class="nav-container">
+            <ul class="nav-links">
+                <li><a href="{% url 'store:home' %}"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="{% url 'store:products' %}" class="{% if request.path == '/products/' %}active{% endif %}">
+                    <i class="fas fa-box"></i> Products
+                </a></li>
+                <li class="dropdown">
+                    <a href="{% url 'store:categories' %}" class="{% if not selected_category %}active{% endif %}">
+                        <i class="fas fa-list"></i> Categories <i class="fas fa-chevron-down" style="font-size: 0.8rem;"></i>
+                    </a>
+                    <ul class="dropdown-menu">
+                        {% for category in categories %}
+                            {% if category.slug %}
+                            <li>
+                                <a href="{% url 'store:category_detail' category.slug %}">
+                                    {% if category.icon %}
+                                        <i class="{{ category.icon }}"></i>
+                                    {% else %}
+                                        <i class="fas fa-folder"></i>
+                                    {% endif %}
+                                    {{ category.name }}
+                                </a>
+                            </li>
+                            {% endif %}
+                        {% empty %}
+                            <li><a href="#"><i class="fas fa-times"></i> No categories available</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                <li><a href="{% url 'store:deals' %}" class="{% if request.path == '/deals/' %}active{% endif %}">
+                    <i class="fas fa-tag"></i> Deals
+                </a></li>
+                <li><a href="{% url 'store:about' %}" class="{% if request.path == '/about/' %}active{% endif %}">
+                    <i class="fas fa-info-circle"></i> About
+                </a></li>
+                <li><a href="{% url 'store:contact' %}" class="{% if request.path == '/contact/' %}active{% endif %}">
+                    <i class="fas fa-envelope"></i> Contact
+                </a></li>
+                <li><a href="{% url 'store:cart' %}" class="cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-badge">{{ cart_count|default:'0' }}</span>
+                </a></li>
+                <li><a href="{% url 'store:account' %}">
+                    <i class="fas fa-user"></i> Account
+                </a></li>
+                {% if user.is_authenticated and user.is_staff %}
+                <li><a href="{% url 'store:admin_dashboard' %}" class="{% if 'dashboard' in request.path %}active{% endif %}" style="background: #f39c12; color: white;">
+                    <i class="fas fa-cog"></i> Admin
+                </a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+    <h1>
+        {% if selected_category %}
+            <i class="{{ category_icon|default:'fas fa-folder' }}"></i> {{ category_name }}
+        {% else %}
+            <i class="fas fa-folder-open"></i> Browse Categories
+        {% endif %}
+    </h1>
+    
+    <!-- Category Navigation Dropdown - Only shows when a category is selected -->
+    {% if selected_category and categories %}
+    <div style="margin-top: 1.5rem; display: flex; justify-content: center; align-items: center; gap: 1rem; flex-wrap: wrap;">
+        <span style="color: rgba(255,255,255,0.8);"><i class="fas fa-arrow-right"></i> Browse other categories:</span>
+        <div class="category-dropdown" style="position: relative; display: inline-block;">
+            <button class="dropdown-toggle" style="background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.3); color: white; padding: 0.8rem 2rem; border-radius: 30px; font-size: 1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 1rem; backdrop-filter: blur(10px); transition: all 0.3s ease;">
+                <span><i class="fas fa-list"></i> Switch Category</span>
+                <i class="fas fa-chevron-down" style="font-size: 0.8rem;"></i>
+            </button>
+            <div class="dropdown-menu" style="position: absolute; top: 120%; left: 50%; transform: translateX(-50%); background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); min-width: 250px; opacity: 0; visibility: hidden; transition: all 0.3s ease; z-index: 1000; overflow: hidden;">
+                {% for cat in categories %}
+                    {% if cat.name != category_name %}
+                    <a href="{% if cat.slug %}{% url 'store:category_detail' cat.slug %}{% else %}{% url 'store:category_detail' cat.name|slugify %}{% endif %}" 
+                       style="display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; color: #333; text-decoration: none; transition: all 0.3s ease; border-bottom: 1px solid #f0f0f0;">
+                        <i class="{{ cat.icon|default:'fas fa-folder' }}" style="color: #667eea; width: 20px;"></i>
+                        <span style="flex: 1;">{{ cat.name }}</span>
+                        <span style="background: #f0f0f0; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.8rem; color: #666;">{{ cat.product_count }}</span>
+                    </a>
+                    {% endif %}
+                {% endfor %}
+                
+                <!-- Link to all categories -->
+                <a href="{% url 'store:categories' %}" 
+                   style="display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; background: linear-gradient(135deg, #667eea10, #764ba210); color: #667eea; text-decoration: none; transition: all 0.3s ease; font-weight: 600;">
+                    <i class="fas fa-folder-open" style="width: 20px;"></i>
+                    <span>View All Categories</span>
+                    <i class="fas fa-arrow-right" style="margin-left: auto;"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <p>{% if selected_category %}Browse our collection of {{ category_name|lower }}{% else %}Find everything you need in our carefully organized categories{% endif %}</p>
+    </section>
+
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+            <a href="{% url 'store:home' %}"><i class="fas fa-home"></i> Home</a>
+            <span>/</span>
+            {% if selected_category %}
+                <a href="{% url 'store:categories' %}"><i class="fas fa-folder-open"></i> Categories</a>
+                <span>/</span>
+                <span><i class="{{ category_icon|default:'fas fa-folder' }}"></i> {{ category_name }}</span>
+            {% else %}
+                <span><i class="fas fa-folder-open"></i> Categories</span>
+            {% endif %}
+        </div>
+
+        <!-- Dynamic Category Content -->
+        {% if selected_category %}
+            <!-- Specific Category View -->
+            <div class="category-header">
+                <div class="category-icon-large">
+                    <i class="{{ category_icon|default:'fas fa-folder' }}"></i>
+                </div>
+                <div class="category-info">
+                    <h2>{{ category_name }}</h2>
+                    <p>Browse our collection of {{ category_name|lower }}</p>
+                    <small><i class="fas fa-box"></i> {{ products|length }} product{{ products|length|pluralize }} available</small>
+                </div>
+            </div>
+
+            <!-- Filter Bar -->
+            <div class="filter-bar">
+                <div class="filter-options">
+                    <select class="filter-select" id="sort-select">
+                        <option value=""><i class="fas fa-sort"></i> Sort by: Featured</option>
+                        <option value="price_low"><i class="fas fa-sort-amount-down-alt"></i> Price: Low to High</option>
+                        <option value="price_high"><i class="fas fa-sort-amount-up"></i> Price: High to Low</option>
+                        <option value="newest"><i class="fas fa-clock"></i> Newest First</option>
+                        <option value="name"><i class="fas fa-sort-alpha-down"></i> Name</option>
+                    </select>
+                    <select class="filter-select" id="price-filter">
+                        <option value=""><i class="fas fa-coins"></i> All Prices</option>
+                        <option value="0-500">Under Ksh 500</option>
+                        <option value="500-1000">Ksh 500 - 1000</option>
+                        <option value="1000-2000">Ksh 1000 - 2000</option>
+                        <option value="2000+">Above Ksh 2000</option>
+                    </select>
+                </div>
+                <div class="results-count">
+                    <i class="fas fa-box"></i> Showing {{ products|length }} product{{ products|length|pluralize }}
+                </div>
+            </div>
+
+            <!-- Products Grid for Selected Category -->
+            <div class="grid" id="products-grid">
+                {% for product in products %}
+                    <div class="card" data-price="{{ product.price }}" data-name="{{ product.name }}" data-date="{{ product.created_at|date:'U' }}">
+                        <div class="card-image">
+                            {% if product.image %}
+                                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                            {% else %}
+                                <div style="background: #f0f0f0; height: 200px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fas fa-image" style="font-size: 3rem; color: #999;"></i>
+                                </div>
+                            {% endif %}
+                            {% if product.is_new %}
+                                <span class="card-badge"><i class="fas fa-star"></i> New</span>
+                            {% endif %}
+                        </div>
+                        <div class="card-content">
+                            <h3>{{ product.name }}</h3>
+                            <p>{{ product.description|truncatechars:80 }}</p>
+                            <div class="price-section">
+                                <span class="price"><i class="fas fa-coins"></i> Ksh {{ product.price }}</span>
+                                <button class="add-to-cart" data-product-id="{{ product.id }}">
+                                    <i class="fas fa-cart-plus"></i> Add
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="empty-state">
+                        <i class="fas fa-box-open"></i>
+                        <h3>No products found in this category</h3>
+                        <p>Check back later or browse other categories</p>
+                        <a href="{% url 'store:categories' %}" class="btn"><i class="fas fa-folder-open"></i> View All Categories</a>
+                    </div>
+                {% endfor %}
+            </div>
+
+        {% else %}
+            <!-- All Categories View -->
+            <div class="category-nav">
+                {% for category in categories %}
+                    <a href="{% url 'store:category_detail' category.slug %}" class="category-nav-card">
+                        <i class="{{ category.icon|default:'fas fa-folder' }}"></i>
+                        <h3>{{ category.name }}</h3>
+                        <p>{{ category.description|default:'Shop now' }}</p>
+                        <small><i class="fas fa-box"></i> {{ category.count }} product{{ category.count|pluralize }}</small>
+                    </a>
+                {% empty %}
+                    <div class="empty-state">
+                        <i class="fas fa-folder-open"></i>
+                        <h3>No categories available</h3>
+                        <p>Categories will appear here once added by the admin</p>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Featured Products from Categories -->
+            {% if featured_products %}
+                <h2 style="color: white; margin: 3rem 0 1rem;"><i class="fas fa-fire"></i> Popular Products</h2>
+                <div class="grid">
+                    {% for product in featured_products %}
+                        <div class="card">
+                            <div class="card-image">
+                                {% if product.image %}
+                                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                                {% else %}
+                                    <div style="background: #f0f0f0; height: 200px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-image" style="font-size: 3rem; color: #999;"></i>
+                                    </div>
+                                {% endif %}
+                                <span class="card-badge"><i class="fas fa-tag"></i> {{ product.category.name }}</span>
+                            </div>
+                            <div class="card-content">
+                                <h3>{{ product.name }}</h3>
+                                <p>{{ product.description|truncatechars:80 }}</p>
+                                <div class="price-section">
+                                    <span class="price"><i class="fas fa-coins"></i> Ksh {{ product.price }}</span>
+                                    <button class="add-to-cart" data-product-id="{{ product.id }}">
+                                        <i class="fas fa-cart-plus"></i> Add
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endif %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3><i class="fas fa-store"></i> About {% if site_settings %}{{ site_settings.site_name }}{% else %}UniMart{% endif %}</h3>
+                <p>{{ site_settings.about_text|default:"Your one-stop shop for all products. We offer quality items at affordable prices for students and staff." }}</p>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/phil.anth.ropist"><i class="fab fa-instagram"></i></a>
+                    <a href="https://x.com/jean__marie_"><i class="fab fa-twitter"></i></a>
+                    <a href="https://wa.me/254743874690"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h3><i class="fas fa-link"></i> Quick Links</h3>
+                <ul>
+                    <li><a href="{% url 'store:about' %}"><i class="fas fa-chevron-right"></i> About Us</a></li>
+                    <li><a href="{% url 'store:contact' %}"><i class="fas fa-chevron-right"></i> Contact Us</a></li>
+                    <li><a href="{% url 'store:faq' %}"><i class="fas fa-chevron-right"></i> FAQ</a></li>
+                    <li><a href="{% url 'store:shipping' %}"><i class="fas fa-chevron-right"></i> Shipping Info</a></li>
+                    <li><a href="{% url 'store:returns' %}"><i class="fas fa-chevron-right"></i> Returns Policy</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3><i class="fas fa-tags"></i> Categories</h3>
+                <ul>
+                    {% for category in categories|slice:":6" %}
+                        {% if category.slug %}
+                        <li><a href="{% url 'store:category_detail' category.slug %}"><i class="{{ category.icon|default:'fas fa-folder' }}"></i> {{ category.name }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3><i class="fas fa-address-card"></i> Contact Info</h3>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> {{ site_settings.contact_address|default:"Mama Ngina University" }}</li>
+                    <li><i class="fas fa-phone-alt"></i> {{ site_settings.contact_phone|default:"+2547 4387 4690" }}</li>
+                    <li><i class="fas fa-envelope"></i> {{ site_settings.contact_email|default:"info@unimart.ac.ke" }}</li>
+                    <li><i class="fas fa-clock"></i> {{ site_settings.business_hours|default:"Mon-Fri: 8am - 6pm" }}</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; {% now "Y" %} {% if site_settings %}{{ site_settings.site_name }}{% else %}UniMart{% endif %}. All rights reserved. | Designed with <i class="fas fa-heart"></i> for comrades</p>
+            <p>Maintained by <a href="{{ site_settings.maintainer_url|default:'https://okalmjohn.netlify.app' }}" target="_blank">{{ site_settings.maintainer_name|default:'Jean Marie' }}</a></p>
+        </div>
+    </footer>
+
+    <script>
+        // Get CSRF token
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrftoken = getCookie('csrftoken');
+
+        // Highlight active category in dropdown
+        const currentPath = window.location.pathname;
+        const dropdownLinks = document.querySelectorAll('.dropdown-menu a');
+        
+        dropdownLinks.forEach(link => {
+            if (link.getAttribute('href') === currentPath) {
+                link.style.background = 'linear-gradient(135deg, #667eea10, #764ba210)';
+                link.style.color = '#667eea';
+            }
+        });
+
+        // Simple filter functionality
+        document.getElementById('sort-select')?.addEventListener('change', function() {
+            const sortBy = this.value;
+            const grid = document.getElementById('products-grid');
+            if (!grid) return;
+            
+            const cards = Array.from(grid.getElementsByClassName('card'));
+            
+            if (sortBy === 'price_low') {
+                cards.sort((a, b) => parseFloat(a.dataset.price) - parseFloat(b.dataset.price));
+            } else if (sortBy === 'price_high') {
+                cards.sort((a, b) => parseFloat(b.dataset.price) - parseFloat(a.dataset.price));
+            } else if (sortBy === 'name') {
+                cards.sort((a, b) => a.dataset.name.localeCompare(b.dataset.name));
+            } else if (sortBy === 'newest') {
+                cards.sort((a, b) => parseInt(b.dataset.date || 0) - parseInt(a.dataset.date || 0));
+            }
+            
+            // Reorder cards
+            cards.forEach(card => grid.appendChild(card));
+        });
+
+        // Add to cart functionality
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+            button.addEventListener('click', function() {
+                const productId = this.dataset.productId;
+                
+                fetch("{% url 'store:add_to_cart' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken
+                    },
+                    body: JSON.stringify({
+                        product_id: productId,
+                        quantity: 1
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const badge = document.querySelector('.cart-badge');
+                        if (badge) {
+                            badge.textContent = data.cart_count;
+                        }
+                        
+                        const originalText = this.innerHTML;
+                        this.innerHTML = '<i class="fas fa-check"></i> Added';
+                        this.style.background = '#27ae60';
+                        
+                        setTimeout(() => {
+                            this.innerHTML = originalText;
+                            this.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
+                        }, 2000);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            });
+        });
+    </script>
+</body>
+</html>

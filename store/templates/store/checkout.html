@@ -1,0 +1,1056 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - MNU Online Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Styles */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links a i {
+            font-size: 1.1rem;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .nav-links a.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .cart-icon {
+            position: relative;
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff4757;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        /* Main container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            flex: 1;
+        }
+
+        /* Header */
+        .checkout-header {
+            text-align: center;
+            color: white;
+            margin-bottom: 3rem;
+        }
+
+        .checkout-header h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .checkout-header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        /* Progress Steps */
+        .progress-steps {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .steps-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .steps-container::before {
+            content: '';
+            position: absolute;
+            top: 25px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #e0e0e0;
+            z-index: 0;
+        }
+
+        .step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            color: #999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.5rem;
+            font-weight: 600;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .step.active .step-circle {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .step.completed .step-circle {
+            background: #27ae60;
+            color: white;
+        }
+
+        .step-label {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .step.active .step-label {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        /* Main Layout */
+        .checkout-layout {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        /* Checkout Form */
+        .checkout-form {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .section {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-title i {
+            color: #667eea;
+            font-size: 1.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.875rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* Payment Methods */
+        .payment-methods {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .payment-method {
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 1.25rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .payment-method:hover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .payment-method.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .payment-method input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #667eea;
+        }
+
+        .payment-info {
+            flex: 1;
+        }
+
+        .payment-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .payment-name i {
+            font-size: 1.5rem;
+            color: #667eea;
+        }
+
+        .payment-desc {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        /* Order Summary */
+        .order-summary {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 2rem;
+        }
+
+        .summary-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .cart-items {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 1.5rem;
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-image {
+            width: 70px;
+            height: 70px;
+            border-radius: 10px;
+            object-fit: cover;
+            background: #f0f0f0;
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.25rem;
+            font-size: 0.95rem;
+        }
+
+        .item-quantity {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .item-price {
+            font-weight: 600;
+            color: #667eea;
+            text-align: right;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            font-size: 0.95rem;
+        }
+
+        .summary-row.total {
+            border-top: 2px solid #f0f0f0;
+            padding-top: 1rem;
+            margin-top: 1rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .summary-row.total .amount {
+            color: #667eea;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            gap: 0.75rem;
+        }
+
+        /* Success Message */
+        .success-message {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 10px 25px rgba(39, 174, 96, 0.3);
+        }
+
+        .success-message i {
+            font-size: 2rem;
+        }
+
+        .success-content h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .success-content p {
+            opacity: 0.95;
+            font-size: 0.95rem;
+        }
+
+        /* Security Badge */
+        .security-badge {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .security-badge i {
+            color: #27ae60;
+            font-size: 1.5rem;
+        }
+
+        .security-text {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Footer Styles */
+        .footer {
+            background: #2c3e50;
+            color: white;
+            margin-top: 4rem;
+            padding: 3rem 2rem 1rem;
+            width: 100%;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section ul li i {
+            margin-right: 0.5rem;
+            width: 1.2rem;
+            color: #667eea;
+        }
+
+        .footer-section a {
+            color: #ecf0f1;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .footer-section a:hover {
+            color: #667eea;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            transform: translateY(-3px);
+        }
+
+        .social-links a i {
+            font-size: 1.2rem;
+            margin: 0;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            color: #bdc3c7;
+        }
+
+        .footer-bottom i {
+            color: #ff6b6b;
+            margin: 0 0.2rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .checkout-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .order-summary {
+                position: static;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .checkout-header {
+                margin-bottom: 2rem;
+            }
+
+            .progress-steps {
+                padding: 1.5rem;
+            }
+
+            .step-label {
+                font-size: 0.75rem;
+            }
+
+            .step-circle {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+
+            .checkout-form,
+            .order-summary {
+                padding: 1.5rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .steps-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .steps-container::before {
+                display: none;
+            }
+
+            .step {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .step-circle {
+                margin: 0;
+            }
+
+            .step-label {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <nav class="nav-container">
+            <div class="nav-links">
+                <a href="{% url 'store:home' %}">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                <a href="{% url 'store:products' %}">
+                    <i class="fas fa-box"></i> Products
+                </a>
+                <a href="{% url 'store:categories' %}">
+                    <i class="fas fa-list"></i> Categories
+                </a>
+                <a href="{% url 'store:deals' %}">
+                    <i class="fas fa-tag"></i> Deals
+                </a>
+                <a href="{% url 'store:about' %}">
+                    <i class="fas fa-info-circle"></i> About
+                </a>
+                <a href="{% url 'store:contact' %}">
+                    <i class="fas fa-envelope"></i> Contact
+                </a>
+                <a href="{% url 'store:cart' %}" class="cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-badge">{{ cart_items_count|default:'0' }}</span>
+                </a>
+                <a href="{% url 'store:account' %}" class="active">
+                    <i class="fas fa-user"></i> Account
+                </a>
+                {% if user.is_authenticated and user.is_staff %}
+                <a href="{% url 'store:admin_dashboard' %}" class="{% if 'dashboard' in request.path %}active{% endif %}" style="background: #f39c12; color: white;">
+                    <i class="fas fa-cog"></i> Admin
+                </a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="checkout-header">
+            <h1><i class="fas fa-shopping-cart"></i> Secure Checkout</h1>
+            <p>Complete your purchase in just a few steps</p>
+        </div>
+
+        <!-- Success Message (if payment successful) -->
+        {% if request.GET.payment == 'mpesa' and request.GET.receipt %}
+        <div class="success-message">
+            <i class="fas fa-check-circle"></i>
+            <div class="success-content">
+                <h3>Payment Received!</h3>
+                <p>Receipt: {{ request.GET.receipt }} - Your order is being processed.</p>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Progress Steps -->
+        <div class="progress-steps">
+            <div class="steps-container">
+                <div class="step completed">
+                    <div class="step-circle"><i class="fas fa-check"></i></div>
+                    <div class="step-label">Cart</div>
+                </div>
+                <div class="step active">
+                    <div class="step-circle">2</div>
+                    <div class="step-label">Checkout</div>
+                </div>
+                <div class="step">
+                    <div class="step-circle">3</div>
+                    <div class="step-label">Payment</div>
+                </div>
+                <div class="step">
+                    <div class="step-circle">4</div>
+                    <div class="step-label">Complete</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Layout -->
+        <div class="checkout-layout">
+            <!-- Checkout Form -->
+            <div class="checkout-form">
+                <form method="post" id="checkoutForm">
+                    {% csrf_token %}
+                    
+                    <!-- Shipping Information -->
+                    <div class="section">
+                        <h2 class="section-title">
+                            <i class="fas fa-shipping-fast"></i>
+                            Shipping Information
+                        </h2>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="first_name">First Name *</label>
+                                <input type="text" id="first_name" name="first_name" 
+                                       value="{{ user.first_name }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="last_name">Last Name *</label>
+                                <input type="text" id="last_name" name="last_name" 
+                                       value="{{ user.last_name }}" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email Address *</label>
+                            <input type="email" id="email" name="email" 
+                                   value="{{ user.email }}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">Phone Number *</label>
+                            <input type="tel" id="phone" name="phone" 
+                                   placeholder="254712345678" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="address">Street Address *</label>
+                            <input type="text" id="address" name="address" 
+                                   placeholder="Building, Street" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="city">City *</label>
+                                <input type="text" id="city" name="city" 
+                                       value="Nairobi" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="postal_code">Postal Code</label>
+                                <input type="text" id="postal_code" name="postal_code" 
+                                       placeholder="00100">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="notes">Delivery Notes (Optional)</label>
+                            <textarea id="notes" name="notes" 
+                                      placeholder="Any special instructions for delivery"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Payment Method -->
+                    <div class="section">
+                        <h2 class="section-title">
+                            <i class="fas fa-credit-card"></i>
+                            Payment Method
+                        </h2>
+
+                        <div class="payment-methods">
+                            <label class="payment-method selected">
+                                <input type="radio" name="payment_method" value="mpesa" checked>
+                                <div class="payment-info">
+                                    <div class="payment-name">
+                                        <i class="fas fa-mobile-alt"></i>
+                                        M-Pesa
+                                    </div>
+                                    <div class="payment-desc">Pay securely with M-Pesa STK Push</div>
+                                </div>
+                            </label>
+
+                            <label class="payment-method">
+                                <input type="radio" name="payment_method" value="cash">
+                                <div class="payment-info">
+                                    <div class="payment-name">
+                                        <i class="fas fa-money-bill-wave"></i>
+                                        Cash on Delivery
+                                    </div>
+                                    <div class="payment-desc">Pay with cash when you receive your order</div>
+                                </div>
+                            </label>
+                        </div>
+
+                        <div id="mpesa-phone-group" class="form-group" style="margin-top: 1.5rem;">
+                            <label for="mpesa_phone">M-Pesa Phone Number *</label>
+                            <input type="tel" id="mpesa_phone" name="mpesa_phone" 
+                                   placeholder="254712345678" required>
+                            <small style="color: #666; font-size: 0.85rem; display: block; margin-top: 0.5rem;">
+                                <i class="fas fa-info-circle"></i> You'll receive an STK push to complete payment
+                            </small>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="submitBtn">
+                        <i class="fas fa-lock"></i>
+                        Place Order Securely
+                    </button>
+
+                    <div class="security-badge">
+                        <i class="fas fa-shield-alt"></i>
+                        <div class="security-text">
+                            <strong>Secure Checkout</strong><br>
+                            Your information is protected with SSL encryption
+                        </div>
+                    </div>
+                </form>
+
+                <a href="{% url 'store:cart' %}" class="btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Cart
+                </a>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="order-summary">
+                <h3 class="summary-title">Order Summary</h3>
+
+                <div class="cart-items">
+                    {% for item in cart_items %}
+                    <div class="cart-item">
+                        {% if item.product.image %}
+                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="item-image">
+                        {% else %}
+                        <div class="item-image" style="display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-image" style="color: #ccc; font-size: 2rem;"></i>
+                        </div>
+                        {% endif %}
+                        <div class="item-details">
+                            <div class="item-name">{{ item.product.name }}</div>
+                            <div class="item-quantity">Qty: {{ item.quantity }}</div>
+                        </div>
+                        <div class="item-price">
+                            Ksh {{ item.product.price|floatformat:2|intcomma }}
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p style="text-align: center; color: #999; padding: 2rem 0;">
+                        <i class="fas fa-shopping-cart" style="font-size: 3rem; margin-bottom: 1rem; display: block;"></i>
+                        Your cart is empty
+                    </p>
+                    {% endfor %}
+                </div>
+
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span>Ksh {{ subtotal|floatformat:2|intcomma }}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Tax (16%)</span>
+                    <span>Ksh {{ tax|floatformat:2|intcomma }}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Shipping</span>
+                    <span>Ksh {{ shipping|floatformat:2|intcomma }}</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span class="amount">Ksh {{ total|floatformat:2|intcomma }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Payment method toggle
+        const paymentMethods = document.querySelectorAll('.payment-method');
+        const mpesaPhoneGroup = document.getElementById('mpesa-phone-group');
+
+        paymentMethods.forEach(method => {
+            method.addEventListener('click', function() {
+                paymentMethods.forEach(m => m.classList.remove('selected'));
+                this.classList.add('selected');
+                this.querySelector('input[type="radio"]').checked = true;
+
+                // Show/hide M-Pesa phone input
+                const selectedMethod = this.querySelector('input[type="radio"]').value;
+                if (selectedMethod === 'mpesa') {
+                    mpesaPhoneGroup.style.display = 'block';
+                    document.getElementById('mpesa_phone').required = true;
+                } else {
+                    mpesaPhoneGroup.style.display = 'none';
+                    document.getElementById('mpesa_phone').required = false;
+                }
+            });
+        });
+
+        // Form submission
+        const checkoutForm = document.getElementById('checkoutForm');
+        const submitBtn = document.getElementById('submitBtn');
+
+        checkoutForm.addEventListener('submit', function(e) {
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<div class="spinner"></div> Processing...';
+
+            // Form will submit normally
+            // The disabled state and spinner will show until page redirects
+        });
+
+        // Auto-fill M-Pesa phone from regular phone
+        const phoneInput = document.getElementById('phone');
+        const mpesaPhoneInput = document.getElementById('mpesa_phone');
+
+        phoneInput.addEventListener('blur', function() {
+            if (!mpesaPhoneInput.value && this.value) {
+                mpesaPhoneInput.value = this.value;
+            }
+        });
+    </script>
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3><i class="fas fa-store"></i> About UniMart</h3>
+                <p>Your one-stop shop for all products. We offer quality items at affordable prices for students and staff.</p>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/phil.anth.ropist"><i class="fab fa-instagram"></i></a>
+                    <a href="https://x.com/jean__marie_"><i class="fab fa-twitter"></i></a>
+                    <a href="https://wa.me/254743874690"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h3><i class="fas fa-link"></i> Quick Links</h3>
+                <ul>
+                    <li><a href="{% url 'store:about' %}"><i class="fas fa-chevron-right"></i> About Us</a></li>
+                    <li><a href="{% url 'store:contact' %}"><i class="fas fa-chevron-right"></i> Contact Us</a></li>
+                    <li><a href="{% url 'store:faq' %}"><i class="fas fa-chevron-right"></i> FAQ</a></li>
+                    <li><a href="{% url 'store:shipping' %}"><i class="fas fa-chevron-right"></i> Shipping Info</a></li>
+                    <li><a href="{% url 'store:returns' %}"><i class="fas fa-chevron-right"></i> Returns Policy</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3><i class="fas fa-tags"></i> Categories</h3>
+                <ul>
+                    <li><a href="{% url 'store:category_detail' 'Electricals' %}"><i class="fas fa-laptop"></i> Electricals</a></li>
+                    <li><a href="{% url 'store:category_detail' 'Cosmetics' %}"><i class="fas fa-paint-brush"></i> Cosmetics</a></li>
+                    <li><a href="{% url 'store:category_detail' 'Snacks' %}"><i class="fas fa-utensils"></i> Snacks</a></li>
+                    <li><a href="{% url 'store:category_detail' 'Toiletries' %}"><i class="fas fa-broom"></i> Toiletries</a></li>
+                    <li><a href="{% url 'store:category_detail' 'Wearables' %}"><i class="fas fa-tshirt"></i> Wearables</a></li>
+                    <li><a href="{% url 'store:category_detail' 'Stationaries' %}"><i class="fas fa-pen"></i> Stationaries</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3><i class="fas fa-address-card"></i> Contact Info</h3>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> Mama Ngina University</li>
+                    <li><i class="fas fa-phone-alt"></i> +2547 4387 4690</li>
+                    <li><i class="fas fa-envelope"></i> info@unimart.ac.ke</li>
+                    <li><i class="fas fa-clock"></i> Mon-Fri: 8am - 6pm</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2026 UniMart. All rights reserved. | Designed with <i class="fas fa-heart"></i> for comrades</p>
+            <p>Maintained by <a href="https://okalmjohn.netlify.app" style="color: #667eea;">Jean Marie</a></p>
+        </div>
+    </footer>
+</body>
+</html>

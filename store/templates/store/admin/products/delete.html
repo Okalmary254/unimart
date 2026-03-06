@@ -1,0 +1,105 @@
+{% extends 'store/admin/base.html' %}
+
+{% block title %}Delete Product - UniMart Admin{% endblock %}
+{% block page_icon %}fas fa-trash-alt{% endblock %}
+{% block page_title %}Delete Product: {{ product.name }}{% endblock %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto; text-align: center;">
+    <!-- Warning Card -->
+    <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 15px; padding: 2rem; margin-bottom: 2rem;">
+        <i class="fas fa-exclamation-triangle" style="font-size: 4rem; color: #ffc107; margin-bottom: 1rem;"></i>
+        <h2 style="color: #856404; margin-bottom: 1rem;">Warning!</h2>
+        <p style="color: #856404; font-size: 1.1rem; margin-bottom: 1rem;">
+            You are about to delete the product: <strong>"{{ product.name }}"</strong>
+        </p>
+        <p style="color: #856404; font-size: 1rem;">
+            This action cannot be undone. All data associated with this product will be permanently removed.
+        </p>
+    </div>
+
+    <!-- Product Details Card -->
+    <div style="background: white; border-radius: 15px; padding: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-bottom: 2rem;">
+        <h3 style="margin-bottom: 1.5rem; color: #333;">Product Details</h3>
+        
+        <div style="display: flex; gap: 2rem; align-items: center; margin-bottom: 1.5rem;">
+            <!-- Product Image -->
+            <div style="width: 150px; height: 150px; border-radius: 10px; overflow: hidden; background: #f0f0f0;">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                {% else %}
+                    <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-image" style="font-size: 3rem; color: #999;"></i>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <!-- Product Info -->
+            <div style="flex: 1; text-align: left;">
+                <p><strong>ID:</strong> #{{ product.id }}</p>
+                <p><strong>Name:</strong> {{ product.name }}</p>
+                <p><strong>Category:</strong> {{ product.category.name }}</p>
+                <p><strong>Price:</strong> Ksh {{ product.price|floatformat:2 }}</p>
+                <p><strong>Stock:</strong> {{ product.stock }}</p>
+                <p><strong>Created:</strong> {{ product.created_at|date:"M d, Y" }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Form -->
+    <form method="post" style="background: white; border-radius: 15px; padding: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+        {% csrf_token %}
+        
+        <p style="color: #666; margin-bottom: 2rem;">
+            Are you sure you want to permanently delete this product?
+        </p>
+        
+        <div style="display: flex; gap: 1rem; justify-content: center;">
+            <button type="submit" class="btn btn-danger" style="min-width: 150px;">
+                <i class="fas fa-trash"></i> Yes, Delete
+            </button>
+            <a href="{% url 'store:admin_products' %}" class="btn btn-outline" style="min-width: 150px;">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+<style>
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.8rem 1.5rem;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: none;
+    }
+    
+    .btn-danger {
+        background: linear-gradient(135deg, #ff6b6b, #ff4757);
+        color: white;
+    }
+    
+    .btn-danger:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 71, 87, 0.4);
+    }
+    
+    .btn-outline {
+        background: transparent;
+        border: 2px solid #667eea;
+        color: #667eea;
+    }
+    
+    .btn-outline:hover {
+        background: #667eea;
+        color: white;
+        transform: translateY(-2px);
+    }
+</style>
+{% endblock %}
