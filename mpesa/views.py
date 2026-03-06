@@ -297,18 +297,13 @@ def check_payment_status(request, checkout_request_id):
 
 @login_required
 def mpesa_payment_page(request):
-    """
-    Render the M-Pesa payment page
-    """
-    # Get cart total or order total
+    
     cart = request.session.get('cart', {})
     total = 0
     
-    # Calculate cart total
     for item in cart.values():
         total += float(item.get('price', 0)) * int(item.get('quantity', 1))
     
-    # Check if running on localhost
     on_localhost = is_localhost()
     
     context = {
