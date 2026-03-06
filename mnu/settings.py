@@ -47,9 +47,9 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'mnu.urls'
 
 LOGIN_URL = os.getenv('LOGIN_URL', 'accounts:login')
-LOGIN_REDIRECT_URL = os.getenv('LOGIN_REDIRECT_URL', 'account')
+LOGIN_REDIRECT_URL = os.getenv('LOGIN_REDIRECT_URL', 'store:account')
 LOGOUT_URL = os.getenv('LOGOUT_URL', 'accounts:logout')
-LOGOUT_REDIRECT_URL = os.getenv('LOGOUT_REDIRECT_URL', 'home')
+LOGOUT_REDIRECT_URL = os.getenv('LOGOUT_REDIRECT_URL', 'store:home')
 
 TEMPLATES = [
     {

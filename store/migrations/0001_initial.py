@@ -43,10 +43,10 @@ class Migration(migrations.Migration):
             name='SiteSettings',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('site_name', models.CharField(default='MNU Online Store', max_length=100)),
+                ('site_name', models.CharField(default='UniMart', max_length=100)),
                 ('contact_email', models.EmailField(default='info@mnustore.ac.ke', max_length=254)),
                 ('contact_phone', models.CharField(default='+2547 4387 4690', max_length=20)),
-                ('contact_address', models.CharField(default='MNU Campus', max_length=255)),
+                ('contact_address', models.CharField(default='Mama Ngina University', max_length=255)),
                 ('business_hours', models.CharField(default='Mon-Fri: 8am - 6pm', max_length=100)),
                 ('facebook', models.URLField(blank=True)),
                 ('instagram', models.URLField(blank=True)),

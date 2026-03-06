@@ -5,9 +5,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout - MNU Online Store</title>
+    <title>Checkout - UniMart</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -16,21 +16,21 @@
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Inter', sans-serif;
+            background: #f8fafc;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            color: #1e293b;
         }
 
         /* Header Styles */
         .header {
-            background: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
             position: sticky;
             top: 0;
             z-index: 1000;
-            backdrop-filter: blur(10px);
         }
 
         .nav-container {
@@ -50,29 +50,39 @@
 
         .nav-links a {
             text-decoration: none;
-            color: #333;
-            font-weight: 600;
+            color: #475569;
+            font-weight: 500;
             padding: 0.5rem 1rem;
             border-radius: 8px;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             position: relative;
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            font-size: 0.95rem;
         }
 
         .nav-links a i {
-            font-size: 1.1rem;
+            font-size: 1rem;
+            color: #64748b;
         }
 
         .nav-links a:hover {
-            color: #667eea;
-            background: rgba(102, 126, 234, 0.1);
+            color: #0f172a;
+            background: #f1f5f9;
+        }
+
+        .nav-links a:hover i {
+            color: #334155;
         }
 
         .nav-links a.active {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
+            color: #2563eb;
+            background: #eef2ff;
+        }
+
+        .nav-links a.active i {
+            color: #2563eb;
         }
 
         .cart-icon {
@@ -81,54 +91,54 @@
 
         .cart-badge {
             position: absolute;
-            top: -8px;
-            right: -8px;
-            background: #ff4757;
+            top: -6px;
+            right: -6px;
+            background: #2563eb;
             color: white;
             border-radius: 50%;
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.75rem;
-            font-weight: bold;
+            font-size: 0.7rem;
+            font-weight: 600;
         }
 
         /* Main container */
         .container {
             max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem 1.5rem;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
             flex: 1;
         }
 
         /* Header */
         .checkout-header {
             text-align: center;
-            color: white;
-            margin-bottom: 3rem;
+            margin-bottom: 2.5rem;
         }
 
         .checkout-header h1 {
-            font-size: clamp(2rem, 5vw, 3rem);
+            font-size: clamp(2rem, 4vw, 2.5rem);
             font-weight: 700;
             margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            color: #0f172a;
         }
 
         .checkout-header p {
             font-size: 1.1rem;
-            opacity: 0.95;
+            color: #475569;
         }
 
         /* Progress Steps */
         .progress-steps {
             background: white;
-            border-radius: 20px;
-            padding: 2rem;
+            border-radius: 16px;
+            padding: 1.5rem 2rem;
             margin-bottom: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e2e8f0;
         }
 
         .steps-container {
@@ -141,11 +151,11 @@
         .steps-container::before {
             content: '';
             position: absolute;
-            top: 25px;
+            top: 24px;
             left: 0;
             right: 0;
-            height: 3px;
-            background: #e0e0e0;
+            height: 2px;
+            background: #e2e8f0;
             z-index: 0;
         }
 
@@ -154,65 +164,73 @@
             text-align: center;
             position: relative;
             z-index: 1;
+            background: white;
         }
 
         .step-circle {
-            width: 50px;
-            height: 50px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
-            background: #e0e0e0;
-            color: #999;
+            background: #f1f5f9;
+            color: #64748b;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 0.5rem;
             font-weight: 600;
-            font-size: 1.2rem;
-            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            transition: all 0.2s ease;
+            border: 2px solid #e2e8f0;
         }
 
         .step.active .step-circle {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: #2563eb;
             color: white;
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            border-color: #2563eb;
         }
 
         .step.completed .step-circle {
-            background: #27ae60;
+            background: #10b981;
             color: white;
+            border-color: #10b981;
         }
 
         .step-label {
             font-size: 0.9rem;
-            color: #666;
+            color: #64748b;
             font-weight: 500;
         }
 
         .step.active .step-label {
-            color: #667eea;
+            color: #2563eb;
             font-weight: 600;
+        }
+
+        .step.completed .step-label {
+            color: #10b981;
         }
 
         /* Main Layout */
         .checkout-layout {
             display: grid;
-            grid-template-columns: 1fr 400px;
-            gap: 2rem;
+            grid-template-columns: 1fr 380px;
+            gap: 1.5rem;
             align-items: start;
         }
 
         /* Checkout Form */
         .checkout-form {
             background: white;
-            border-radius: 20px;
+            border-radius: 16px;
             padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e2e8f0;
         }
 
         .section {
             margin-bottom: 2rem;
             padding-bottom: 2rem;
-            border-bottom: 2px solid #f0f0f0;
+            border-bottom: 1px solid #e2e8f0;
         }
 
         .section:last-child {
@@ -222,9 +240,9 @@
         }
 
         .section-title {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: 600;
-            color: #333;
+            color: #0f172a;
             margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
@@ -232,8 +250,8 @@
         }
 
         .section-title i {
-            color: #667eea;
-            font-size: 1.5rem;
+            color: #2563eb;
+            font-size: 1.3rem;
         }
 
         .form-row {
@@ -251,7 +269,7 @@
             display: block;
             font-size: 0.9rem;
             font-weight: 500;
-            color: #555;
+            color: #334155;
             margin-bottom: 0.5rem;
         }
 
@@ -259,20 +277,22 @@
         .form-group select,
         .form-group textarea {
             width: 100%;
-            padding: 0.875rem;
-            border: 2px solid #e0e0e0;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e2e8f0;
             border-radius: 10px;
             font-size: 0.95rem;
             font-family: inherit;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
+            background: #f8fafc;
         }
 
         .form-group input:focus,
         .form-group select:focus,
         .form-group textarea:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #2563eb;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
         .form-group textarea {
@@ -283,35 +303,35 @@
         /* Payment Methods */
         .payment-methods {
             display: grid;
-            gap: 1rem;
+            gap: 0.75rem;
         }
 
         .payment-method {
-            border: 2px solid #e0e0e0;
-            border-radius: 15px;
-            padding: 1.25rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
             gap: 1rem;
+            background: #f8fafc;
         }
 
         .payment-method:hover {
-            border-color: #667eea;
-            background: rgba(102, 126, 234, 0.05);
+            border-color: #2563eb;
+            background: #f0f4ff;
         }
 
         .payment-method.selected {
-            border-color: #667eea;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+            border-color: #2563eb;
+            background: #eef2ff;
         }
 
         .payment-method input[type="radio"] {
-            width: 20px;
-            height: 20px;
-            accent-color: #667eea;
+            width: 18px;
+            height: 18px;
+            accent-color: #2563eb;
         }
 
         .payment-info {
@@ -320,53 +340,86 @@
 
         .payment-name {
             font-weight: 600;
-            color: #333;
-            margin-bottom: 0.25rem;
+            color: #0f172a;
+            margin-bottom: 0.2rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
 
         .payment-name i {
-            font-size: 1.5rem;
-            color: #667eea;
+            font-size: 1.3rem;
+            color: #2563eb;
         }
 
         .payment-desc {
             font-size: 0.85rem;
-            color: #666;
+            color: #64748b;
+        }
+
+        /* M-Pesa Phone Input */
+        #mpesa-phone-group {
+            background: #f8fafc;
+            padding: 1.25rem;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        #mpesa-phone-group label {
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        #mpesa-phone-group input {
+            background: white;
         }
 
         /* Order Summary */
         .order-summary {
             background: white;
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e2e8f0;
             position: sticky;
-            top: 2rem;
+            top: 100px;
         }
 
         .summary-title {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             font-weight: 600;
-            color: #333;
+            color: #0f172a;
             margin-bottom: 1.5rem;
             padding-bottom: 1rem;
-            border-bottom: 2px solid #f0f0f0;
+            border-bottom: 1px solid #e2e8f0;
         }
 
         .cart-items {
             max-height: 300px;
             overflow-y: auto;
             margin-bottom: 1.5rem;
+            padding-right: 0.5rem;
+        }
+
+        .cart-items::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .cart-items::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+
+        .cart-items::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 4px;
         }
 
         .cart-item {
             display: flex;
             gap: 1rem;
-            padding: 1rem 0;
-            border-bottom: 1px solid #f0f0f0;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #f1f5f9;
         }
 
         .cart-item:last-child {
@@ -374,11 +427,11 @@
         }
 
         .item-image {
-            width: 70px;
-            height: 70px;
-            border-radius: 10px;
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
             object-fit: cover;
-            background: #f0f0f0;
+            background: #f1f5f9;
         }
 
         .item-details {
@@ -387,54 +440,56 @@
 
         .item-name {
             font-weight: 600;
-            color: #333;
-            margin-bottom: 0.25rem;
-            font-size: 0.95rem;
+            color: #0f172a;
+            margin-bottom: 0.2rem;
+            font-size: 0.9rem;
         }
 
         .item-quantity {
-            font-size: 0.85rem;
-            color: #666;
+            font-size: 0.8rem;
+            color: #64748b;
         }
 
         .item-price {
             font-weight: 600;
-            color: #667eea;
+            color: #2563eb;
             text-align: right;
+            font-size: 0.95rem;
         }
 
         .summary-row {
             display: flex;
             justify-content: space-between;
-            padding: 0.75rem 0;
+            padding: 0.6rem 0;
             font-size: 0.95rem;
+            color: #475569;
         }
 
         .summary-row.total {
-            border-top: 2px solid #f0f0f0;
+            border-top: 1px solid #e2e8f0;
             padding-top: 1rem;
-            margin-top: 1rem;
-            font-size: 1.2rem;
+            margin-top: 0.5rem;
+            font-size: 1.1rem;
             font-weight: 700;
-            color: #333;
+            color: #0f172a;
         }
 
         .summary-row.total .amount {
-            color: #667eea;
+            color: #2563eb;
         }
 
         /* Buttons */
         .btn-primary {
             width: 100%;
-            padding: 1rem;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 0.875rem;
+            background: #2563eb;
             color: white;
             border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
+            border-radius: 10px;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -442,84 +497,95 @@
             margin-top: 1.5rem;
         }
 
-        .btn-primary:hover {
+        .btn-primary:hover:not(:disabled) {
+            background: #1d4ed8;
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
         }
 
-        .btn-primary:active {
-            transform: translateY(0);
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
 
         .btn-secondary {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            color: #667eea;
+            color: #64748b;
             text-decoration: none;
-            font-weight: 600;
+            font-weight: 500;
             margin-top: 1rem;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
+            font-size: 0.95rem;
         }
 
         .btn-secondary:hover {
+            color: #2563eb;
             gap: 0.75rem;
         }
 
         /* Success Message */
         .success-message {
-            background: linear-gradient(135deg, #27ae60, #229954);
-            color: white;
-            padding: 1.5rem;
-            border-radius: 15px;
+            background: #ecfdf5;
+            color: #065f46;
+            padding: 1.25rem;
+            border-radius: 12px;
             margin-bottom: 2rem;
             display: flex;
             align-items: center;
             gap: 1rem;
-            box-shadow: 0 10px 25px rgba(39, 174, 96, 0.3);
+            border: 1px solid #a7f3d0;
         }
 
         .success-message i {
-            font-size: 2rem;
+            font-size: 1.5rem;
+            color: #10b981;
         }
 
         .success-content h3 {
-            font-size: 1.3rem;
-            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+            font-weight: 600;
         }
 
         .success-content p {
-            opacity: 0.95;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
+            opacity: 0.9;
         }
 
         /* Security Badge */
         .security-badge {
-            background: #f8f9fa;
+            background: #f8fafc;
             border-radius: 10px;
             padding: 1rem;
             margin-top: 1.5rem;
             display: flex;
             align-items: center;
             gap: 0.75rem;
+            border: 1px solid #e2e8f0;
         }
 
         .security-badge i {
-            color: #27ae60;
-            font-size: 1.5rem;
+            color: #10b981;
+            font-size: 1.3rem;
         }
 
         .security-text {
             font-size: 0.85rem;
-            color: #666;
+            color: #475569;
+        }
+
+        .security-text strong {
+            color: #0f172a;
         }
 
         /* Loading Spinner */
         .spinner {
             display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
             border-radius: 50%;
             border-top-color: white;
             animation: spin 0.8s linear infinite;
@@ -529,10 +595,80 @@
             to { transform: rotate(360deg); }
         }
 
+        /* Payment Status Modal */
+        #payment-status-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+
+        #payment-status-modal > div {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+        }
+
+        #payment-status-icon i {
+            font-size: 3rem;
+        }
+
+        #payment-status-title {
+            margin: 1rem 0;
+            color: #0f172a;
+            font-weight: 600;
+        }
+
+        #payment-status-message {
+            color: #475569;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        #payment-status-details {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        #close-payment-modal {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: background 0.2s ease;
+        }
+
+        #close-payment-modal:hover {
+            background: #1d4ed8;
+        }
+
         /* Footer Styles */
         .footer {
-            background: #2c3e50;
-            color: white;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            color: #475569;
             margin-top: 4rem;
             padding: 3rem 2rem 1rem;
             width: 100%;
@@ -542,14 +678,15 @@
             max-width: 1400px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 2rem;
         }
 
         .footer-section h3 {
             margin-bottom: 1rem;
-            font-size: 1.2rem;
-            color: #667eea;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #0f172a;
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -561,65 +698,71 @@
 
         .footer-section ul li {
             margin-bottom: 0.5rem;
+            font-size: 0.9rem;
         }
 
         .footer-section ul li i {
             margin-right: 0.5rem;
-            width: 1.2rem;
-            color: #667eea;
+            width: 1rem;
+            color: #2563eb;
+            font-size: 0.85rem;
         }
 
         .footer-section a {
-            color: #ecf0f1;
+            color: #64748b;
             text-decoration: none;
-            transition: color 0.3s ease;
-            display: flex;
-            align-items: center;
+            transition: color 0.2s ease;
         }
 
         .footer-section a:hover {
-            color: #667eea;
+            color: #2563eb;
         }
 
         .social-links {
             display: flex;
-            gap: 1rem;
+            gap: 0.75rem;
             margin-top: 1rem;
         }
 
         .social-links a {
             display: inline-flex;
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.1);
+            width: 36px;
+            height: 36px;
+            background: #f1f5f9;
             border-radius: 50%;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
+            color: #64748b;
         }
 
         .social-links a:hover {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            transform: translateY(-3px);
-        }
-
-        .social-links a i {
-            font-size: 1.2rem;
-            margin: 0;
+            background: #2563eb;
+            color: white;
+            transform: translateY(-2px);
         }
 
         .footer-bottom {
             text-align: center;
             margin-top: 3rem;
-            padding-top: 1rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            font-size: 0.9rem;
-            color: #bdc3c7;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e2e8f0;
+            font-size: 0.85rem;
+            color: #94a3b8;
         }
 
         .footer-bottom i {
-            color: #ff6b6b;
+            color: #ef4444;
             margin: 0 0.2rem;
+        }
+
+        .footer-bottom a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        .footer-bottom a:hover {
+            text-decoration: underline;
         }
 
         /* Responsive */
@@ -644,16 +787,8 @@
                 justify-content: center;
             }
 
-            .checkout-header {
-                margin-bottom: 2rem;
-            }
-
             .progress-steps {
-                padding: 1.5rem;
-            }
-
-            .step-label {
-                font-size: 0.75rem;
+                padding: 1rem;
             }
 
             .step-circle {
@@ -662,9 +797,13 @@
                 font-size: 1rem;
             }
 
+            .step-label {
+                font-size: 0.8rem;
+            }
+
             .checkout-form,
             .order-summary {
-                padding: 1.5rem;
+                padding: 1.25rem;
             }
 
             .form-row {
@@ -726,11 +865,11 @@
                     <i class="fas fa-shopping-cart"></i>
                     <span class="cart-badge">{{ cart_items_count|default:'0' }}</span>
                 </a>
-                <a href="{% url 'store:account' %}" class="active">
+                <a href="{% url 'store:account' %}">
                     <i class="fas fa-user"></i> Account
                 </a>
                 {% if user.is_authenticated and user.is_staff %}
-                <a href="{% url 'store:admin_dashboard' %}" class="{% if 'dashboard' in request.path %}active{% endif %}" style="background: #f39c12; color: white;">
+                <a href="{% url 'store:admin_dashboard' %}" style="background: #2563eb; color: white;">
                     <i class="fas fa-cog"></i> Admin
                 </a>
                 {% endif %}
@@ -741,7 +880,7 @@
     <div class="container">
         <!-- Header -->
         <div class="checkout-header">
-            <h1><i class="fas fa-shopping-cart"></i> Secure Checkout</h1>
+            <h1><i class="fas fa-lock" style="color: #2563eb;"></i> Secure Checkout</h1>
             <p>Complete your purchase in just a few steps</p>
         </div>
 
@@ -814,7 +953,7 @@
                         <div class="form-group">
                             <label for="phone">Phone Number *</label>
                             <input type="tel" id="phone" name="phone" 
-                                   placeholder="254712345678" required>
+                                   placeholder="0712345678" required>
                         </div>
 
                         <div class="form-group">
@@ -843,7 +982,7 @@
                         </div>
                     </div>
 
-                    <!-- Payment Method -->
+                    <!-- Payment Method Section -->
                     <div class="section">
                         <h2 class="section-title">
                             <i class="fas fa-credit-card"></i>
@@ -877,10 +1016,23 @@
                         <div id="mpesa-phone-group" class="form-group" style="margin-top: 1.5rem;">
                             <label for="mpesa_phone">M-Pesa Phone Number *</label>
                             <input type="tel" id="mpesa_phone" name="mpesa_phone" 
-                                   placeholder="254712345678" required>
-                            <small style="color: #666; font-size: 0.85rem; display: block; margin-top: 0.5rem;">
+                                   placeholder="0712345678" required>
+                            <small style="color: #64748b; font-size: 0.8rem; display: block; margin-top: 0.5rem;">
                                 <i class="fas fa-info-circle"></i> You'll receive an STK push to complete payment
                             </small>
+                        </div>
+                    </div>
+
+                    <!-- Payment Status Modal -->
+                    <div id="payment-status-modal">
+                        <div>
+                            <div id="payment-status-icon">
+                                <i class="fas fa-spinner fa-pulse" style="font-size: 3rem; color: #2563eb;"></i>
+                            </div>
+                            <h3 id="payment-status-title">Processing Payment</h3>
+                            <p id="payment-status-message">Please check your phone for STK push prompt</p>
+                            <div id="payment-status-details"></div>
+                            <button id="close-payment-modal" style="display: none;">Close</button>
                         </div>
                     </div>
 
@@ -914,11 +1066,11 @@
                         <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="item-image">
                         {% else %}
                         <div class="item-image" style="display: flex; align-items: center; justify-content: center;">
-                            <i class="fas fa-image" style="color: #ccc; font-size: 2rem;"></i>
+                            <i class="fas fa-image" style="color: #94a3b8; font-size: 1.5rem;"></i>
                         </div>
                         {% endif %}
                         <div class="item-details">
-                            <div class="item-name">{{ item.product.name }}</div>
+                            <div class="item-name">{{ item.product.name|truncatechars:30 }}</div>
                             <div class="item-quantity">Qty: {{ item.quantity }}</div>
                         </div>
                         <div class="item-price">
@@ -926,8 +1078,8 @@
                         </div>
                     </div>
                     {% empty %}
-                    <p style="text-align: center; color: #999; padding: 2rem 0;">
-                        <i class="fas fa-shopping-cart" style="font-size: 3rem; margin-bottom: 1rem; display: block;"></i>
+                    <p style="text-align: center; color: #94a3b8; padding: 2rem 0;">
+                        <i class="fas fa-shopping-cart" style="font-size: 3rem; margin-bottom: 1rem; display: block; color: #cbd5e1;"></i>
                         Your cart is empty
                     </p>
                     {% endfor %}
@@ -954,10 +1106,33 @@
     </div>
 
     <script>
-        // Payment method toggle
+        // Get CSRF token
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrftoken = getCookie('csrftoken');
+
+        // DOM Elements
         const paymentMethods = document.querySelectorAll('.payment-method');
         const mpesaPhoneGroup = document.getElementById('mpesa-phone-group');
+        const checkoutForm = document.getElementById('checkoutForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const modal = document.getElementById('payment-status-modal');
+        const phoneInput = document.getElementById('phone');
+        const mpesaPhoneInput = document.getElementById('mpesa_phone');
 
+        // Payment method toggle
         paymentMethods.forEach(method => {
             method.addEventListener('click', function() {
                 paymentMethods.forEach(m => m.classList.remove('selected'));
@@ -976,26 +1151,188 @@
             });
         });
 
+        // Auto-format phone number
+        if (phoneInput && mpesaPhoneInput) {
+            phoneInput.addEventListener('blur', function() {
+                if (!mpesaPhoneInput.value && this.value) {
+                    // Format to 254XXXXXXXXX
+                    let phone = this.value.replace(/\D/g, '');
+                    if (phone.startsWith('0')) {
+                        phone = '254' + phone.substring(1);
+                    } else if (phone.startsWith('7')) {
+                        phone = '254' + phone;
+                    } else if (phone.startsWith('254') && phone.length === 12) {
+                        // Already formatted correctly
+                    } else {
+                        phone = '254' + phone;
+                    }
+                    mpesaPhoneInput.value = phone;
+                }
+            });
+        }
+
         // Form submission
-        const checkoutForm = document.getElementById('checkoutForm');
-        const submitBtn = document.getElementById('submitBtn');
-
-        checkoutForm.addEventListener('submit', function(e) {
-            // Show loading state
+        checkoutForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+            
+            if (paymentMethod === 'cash') {
+                // For cash on delivery, submit normally
+                this.submit();
+                return;
+            }
+            
+            // For M-Pesa, process payment via AJAX
+            const mpesaPhone = document.getElementById('mpesa_phone').value.replace(/\D/g, '');
+            const total = {{ total|default:0 }};
+            
+            // Validate phone number
+            if (!mpesaPhone || mpesaPhone.length < 10) {
+                alert('Please enter a valid M-Pesa phone number');
+                return;
+            }
+            
+            // Format phone number to 254XXXXXXXXX
+            let formattedPhone = mpesaPhone;
+            if (formattedPhone.startsWith('0')) {
+                formattedPhone = '254' + formattedPhone.substring(1);
+            } else if (formattedPhone.startsWith('7')) {
+                formattedPhone = '254' + formattedPhone;
+            } else if (!formattedPhone.startsWith('254')) {
+                formattedPhone = '254' + formattedPhone;
+            }
+            
+            // Show modal
+            modal.style.display = 'flex';
+            
+            // Disable submit button
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<div class="spinner"></div> Processing...';
-
-            // Form will submit normally
-            // The disabled state and spinner will show until page redirects
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Processing...';
+            
+            try {
+                // Initiate STK Push
+                const response = await fetch("{% url 'mpesa:initiate_payment' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken
+                    },
+                    body: JSON.stringify({
+                        phone_number: formattedPhone,
+                        amount: total,
+                        order_id: 'ORD-' + Date.now().toString().slice(-8)
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Update modal with success
+                    document.getElementById('payment-status-icon').innerHTML = '<i class="fas fa-check-circle" style="font-size: 3rem; color: #10b981;"></i>';
+                    document.getElementById('payment-status-title').textContent = 'STK Push Sent!';
+                    document.getElementById('payment-status-message').innerHTML = 'Please check your phone and enter your M-Pesa PIN to complete payment.';
+                    document.getElementById('payment-status-details').innerHTML = `<small>Checkout ID: ${data.checkout_request_id}</small>`;
+                    
+                    // Start polling for payment status
+                    pollPaymentStatus(data.checkout_request_id);
+                } else {
+                    // Handle error
+                    let errorMsg = data.message || 'Failed to initiate payment';
+                    
+                    document.getElementById('payment-status-icon').innerHTML = '<i class="fas fa-times-circle" style="font-size: 3rem; color: #ef4444;"></i>';
+                    document.getElementById('payment-status-title').textContent = 'Payment Failed';
+                    document.getElementById('payment-status-message').textContent = errorMsg;
+                    document.getElementById('close-payment-modal').style.display = 'inline-block';
+                    
+                    // Re-enable submit button
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-lock"></i> Place Order Securely';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('payment-status-icon').innerHTML = '<i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #ef4444;"></i>';
+                document.getElementById('payment-status-title').textContent = 'Error';
+                document.getElementById('payment-status-message').textContent = 'Network error. Please try again.';
+                document.getElementById('close-payment-modal').style.display = 'inline-block';
+                
+                // Re-enable submit button
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-lock"></i> Place Order Securely';
+            }
         });
 
-        // Auto-fill M-Pesa phone from regular phone
-        const phoneInput = document.getElementById('phone');
-        const mpesaPhoneInput = document.getElementById('mpesa_phone');
+        // Poll payment status
+        function pollPaymentStatus(checkoutId) {
+            const pollInterval = setInterval(async () => {
+                try {
+                    const response = await fetch(`/mpesa/status/${checkoutId}/`);
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        if (data.status === 'completed') {
+                            // Payment successful
+                            document.getElementById('payment-status-icon').innerHTML = '<i class="fas fa-check-circle" style="font-size: 3rem; color: #10b981;"></i>';
+                            document.getElementById('payment-status-title').textContent = 'Payment Successful!';
+                            document.getElementById('payment-status-message').innerHTML = `Receipt: ${data.mpesa_receipt || 'N/A'}`;
+                            document.getElementById('close-payment-modal').textContent = 'Continue';
+                            document.getElementById('close-payment-modal').style.display = 'inline-block';
+                            
+                            // Add receipt as hidden input and submit form
+                            const receiptInput = document.createElement('input');
+                            receiptInput.type = 'hidden';
+                            receiptInput.name = 'mpesa_receipt';
+                            receiptInput.value = data.mpesa_receipt || '';
+                            checkoutForm.appendChild(receiptInput);
+                            
+                            // Submit the order form
+                            setTimeout(() => {
+                                checkoutForm.submit();
+                            }, 2000);
+                            
+                            clearInterval(pollInterval);
+                        } else if (data.status === 'failed') {
+                            // Payment failed
+                            document.getElementById('payment-status-icon').innerHTML = '<i class="fas fa-times-circle" style="font-size: 3rem; color: #ef4444;"></i>';
+                            document.getElementById('payment-status-title').textContent = 'Payment Failed';
+                            document.getElementById('payment-status-message').textContent = data.result_description || 'Transaction failed. Please try again.';
+                            document.getElementById('close-payment-modal').style.display = 'inline-block';
+                            
+                            // Re-enable submit button
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = '<i class="fas fa-lock"></i> Place Order Securely';
+                            
+                            clearInterval(pollInterval);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Polling error:', error);
+                }
+            }, 3000); // Poll every 3 seconds
+            
+            // Stop polling after 2 minutes
+            setTimeout(() => {
+                clearInterval(pollInterval);
+                document.getElementById('payment-status-icon').innerHTML = '<i class="fas fa-clock" style="font-size: 3rem; color: #f59e0b;"></i>';
+                document.getElementById('payment-status-title').textContent = 'Still Processing';
+                document.getElementById('payment-status-message').innerHTML = 'Payment is taking longer than expected. Check your M-Pesa messages.';
+                document.getElementById('close-payment-modal').textContent = 'OK';
+                document.getElementById('close-payment-modal').style.display = 'inline-block';
+            }, 120000); // 2 minutes
+        }
 
-        phoneInput.addEventListener('blur', function() {
-            if (!mpesaPhoneInput.value && this.value) {
-                mpesaPhoneInput.value = this.value;
+        // Close modal button
+        document.getElementById('close-payment-modal').addEventListener('click', function() {
+            modal.style.display = 'none';
+            document.getElementById('close-payment-modal').style.display = 'none';
+        });
+
+        // Add active class to current navigation link
+        const currentLocation = window.location.pathname;
+        const navLinks = document.querySelectorAll('.nav-links a:not([style*="background"])');
+        navLinks.forEach(link => {
+            if (link.getAttribute('href') === currentLocation) {
+                link.classList.add('active');
             }
         });
     </script>
@@ -1005,7 +1342,7 @@
         <div class="footer-content">
             <div class="footer-section">
                 <h3><i class="fas fa-store"></i> About UniMart</h3>
-                <p>Your one-stop shop for all products. We offer quality items at affordable prices for students and staff.</p>
+                <p style="color: #64748b; line-height: 1.6; font-size: 0.9rem;">Your one-stop shop for all products. We offer quality items at affordable prices for students and staff.</p>
                 <div class="social-links">
                     <a href="https://www.instagram.com/phil.anth.ropist"><i class="fab fa-instagram"></i></a>
                     <a href="https://x.com/jean__marie_"><i class="fab fa-twitter"></i></a>
@@ -1027,12 +1364,12 @@
             <div class="footer-section">
                 <h3><i class="fas fa-tags"></i> Categories</h3>
                 <ul>
-                    <li><a href="{% url 'store:category_detail' 'Electricals' %}"><i class="fas fa-laptop"></i> Electricals</a></li>
+                    <li><a href="{% url 'store:category_detail' 'Electronics' %}"><i class="fas fa-laptop"></i> Electronics</a></li>
                     <li><a href="{% url 'store:category_detail' 'Cosmetics' %}"><i class="fas fa-paint-brush"></i> Cosmetics</a></li>
                     <li><a href="{% url 'store:category_detail' 'Snacks' %}"><i class="fas fa-utensils"></i> Snacks</a></li>
                     <li><a href="{% url 'store:category_detail' 'Toiletries' %}"><i class="fas fa-broom"></i> Toiletries</a></li>
                     <li><a href="{% url 'store:category_detail' 'Wearables' %}"><i class="fas fa-tshirt"></i> Wearables</a></li>
-                    <li><a href="{% url 'store:category_detail' 'Stationaries' %}"><i class="fas fa-pen"></i> Stationaries</a></li>
+                    <li><a href="{% url 'store:category_detail' 'Stationeries' %}"><i class="fas fa-pen"></i> Stationeries</a></li>
                 </ul>
             </div>
             
@@ -1049,7 +1386,7 @@
         
         <div class="footer-bottom">
             <p>&copy; 2026 UniMart. All rights reserved. | Designed with <i class="fas fa-heart"></i> for comrades</p>
-            <p>Maintained by <a href="https://okalmjohn.netlify.app" style="color: #667eea;">Jean Marie</a></p>
+            <p>Maintained by <a href="https://okalmjohn.netlify.app">Jean Marie</a></p>
         </div>
     </footer>
 </body>

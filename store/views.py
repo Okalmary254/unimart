@@ -19,9 +19,9 @@ from .models import (
     Address, Profile, ContactMessage, SiteSettings
 )
 from django.contrib.auth.models import User
-
-
-# ========== PUBLIC VIEWS ==========
+from django.conf import settings
+import requests
+import base64
 
 # Home Page View
 def home(request):
@@ -227,9 +227,9 @@ def about(request):
     context = {
         'team_members': [
             {'name': 'John Mary', 'position': 'Founder & CEO', 'bio': 'Plumber (Data Engineer)', 'image': 'team/john.jpg'},
-            {'name': 'Sarah Odhiambo', 'position': 'Operations Manager', 'bio': 'Business student', 'image': 'team/sarah.jpg'},
-            {'name': 'David Kimani', 'position': 'Tech Lead', 'bio': 'Software Engineering student', 'image': 'team/david.jpg'},
-            {'name': 'Grace Achieng', 'position': 'Customer Relations', 'bio': 'Marketing student', 'image': 'team/grace.jpg'},
+            {'name': 'Adero David', 'position': 'Operations Manager', 'bio': 'Business student', 'image': 'team/sarah.jpg'},
+            {'name': 'Sam Maina', 'position': 'Tech Lead', 'bio': 'Software Engineering student', 'image': 'team/david.jpg'},
+            {'name': 'Odero Anold', 'position': 'Customer Relations', 'bio': 'Marketing student', 'image': 'team/grace.jpg'},
         ]
     }
     return render(request, 'store/about.html', context)
@@ -523,19 +523,24 @@ def remove_cart_item(request):
 # Checkout View
 @login_required
 def checkout(request):
+    """Checkout page with payment processing"""
+    
+    # Get cart from session
     cart = request.session.get('cart', {})
     
+    # Check if cart is empty
     if not cart:
-        messages.warning(request, 'Your cart is empty.')
+        messages.warning(request, 'Your cart is empty')
         return redirect('store:cart')
     
+    # Build cart items list
     cart_items = []
-    subtotal = 0
+    subtotal = Decimal('0')
     
     for product_id, quantity in cart.items():
         try:
             product = Product.objects.get(id=product_id)
-            item_total = product.discounted_price * quantity
+            item_total = Decimal(str(product.price)) * int(quantity)
             subtotal += item_total
             cart_items.append({
                 'product': product,
@@ -543,19 +548,202 @@ def checkout(request):
                 'subtotal': item_total
             })
         except Product.DoesNotExist:
-            pass
+            # Remove invalid product from cart
+            del cart[product_id]
+            request.session['cart'] = cart
+            continue
     
-    # Get user's addresses
+    # Calculate totals
+    tax = subtotal * Decimal('0.16')  # 16% VAT
+    shipping = Decimal('200.00')  # Fixed shipping
+    total = subtotal + tax + shipping
+    
+    # ==================== POST REQUEST - PROCESS CHECKOUT ====================
+    if request.method == 'POST':
+        print("\n" + "="*60)
+        print("CHECKOUT POST RECEIVED")
+        print("="*60)
+        
+        # Get form data
+        first_name = request.POST.get('first_name', request.user.first_name or '')
+        last_name = request.POST.get('last_name', request.user.last_name or '')
+        email = request.POST.get('email', request.user.email or '')
+        phone = request.POST.get('phone', '')
+        address = request.POST.get('address', '')
+        city = request.POST.get('city', 'Nairobi')
+        postal_code = request.POST.get('postal_code', '')
+        notes = request.POST.get('notes', '')
+        payment_method = request.POST.get('payment_method', '')
+        mpesa_phone = request.POST.get('mpesa_phone', '').strip()
+        
+        print(f"Payment Method: {payment_method}")
+        print(f"M-Pesa Phone: {mpesa_phone}")
+        print(f"Total Amount: Ksh {total}")
+        
+        # Validate required fields
+        if not all([first_name, last_name, email, phone, address, city, payment_method]):
+            messages.error(request, 'Please fill in all required fields')
+            context = {
+                'cart_items': cart_items,
+                'subtotal': subtotal,
+                'tax': tax,
+                'shipping': shipping,
+                'total': total,
+                'cart_items_count': len(cart_items),
+            }
+            return render(request, 'store/checkout.html', context)
+        
+        # Generate unique order number
+        order_number = f"ORD{datetime.now().strftime('%Y%m%d%H%M%S')}{random.randint(100,999)}"
+        
+        # Create the order
+        try:
+            order = Order.objects.create(
+                user=request.user,
+                order_number=order_number,
+                first_name=first_name,
+                last_name=last_name,
+                email=email,
+                phone=phone,
+                address=address,
+                city=city,
+                postal_code=postal_code,
+                notes=notes,
+                subtotal=subtotal,
+                tax=tax,
+                shipping=shipping,
+                total=total,
+                payment_method=payment_method,
+                status='pending'
+            )
+            
+            print(f"✓ Order #{order.id} created successfully")
+            
+            # Create order items from cart
+            for item in cart_items:
+                OrderItem.objects.create(
+                    order=order,
+                    product=item['product'],
+                    quantity=item['quantity'],
+                    price=item['product'].price
+                )
+            
+            print(f"✓ {len(cart_items)} order items created")
+            
+        except Exception as e:
+            print(f"✗ Error creating order: {str(e)}")
+            import traceback
+            traceback.print_exc()
+            messages.error(request, 'Error creating order. Please try again.')
+            context = {
+                'cart_items': cart_items,
+                'subtotal': subtotal,
+                'tax': tax,
+                'shipping': shipping,
+                'total': total,
+                'cart_items_count': len(cart_items),
+            }
+            return render(request, 'store/checkout.html', context)
+        
+        # Process payment based on method
+        if payment_method == 'mpesa':
+            print("\n--- PROCESSING M-PESA PAYMENT ---")
+            
+            # Validate M-Pesa phone number
+            if not mpesa_phone:
+                messages.error(request, 'Please provide your M-Pesa phone number')
+                order.status = 'failed'
+                order.save()
+                return redirect('store:checkout')
+            
+            # Format phone number (convert to 254XXXXXXXXX format)
+            phone_number = mpesa_phone
+            if phone_number.startswith('0'):
+                phone_number = '254' + phone_number[1:]
+            elif phone_number.startswith('+254'):
+                phone_number = phone_number[1:]
+            elif phone_number.startswith('7') or phone_number.startswith('1'):
+                phone_number = '254' + phone_number
+            
+            print(f"Formatted phone number: {phone_number}")
+            
+            # Initiate M-Pesa STK Push
+            try:
+                result = initiate_mpesa_payment(
+                    phone_number=phone_number,
+                    amount=int(total),  # M-Pesa expects integer
+                    order_id=order.id
+                )
+                
+                print(f"M-Pesa Result: {result}")
+                
+                if result.get('success'):
+                    # STK Push sent successfully
+                    checkout_request_id = result.get('checkout_request_id')
+                    order.mpesa_checkout_request_id = checkout_request_id
+                    order.save()
+                    
+                    print(f"✓ STK Push sent! Checkout Request ID: {checkout_request_id}")
+                    
+                    # Clear the cart
+                    request.session['cart'] = {}
+                    request.session.modified = True
+                    print("✓ Cart cleared")
+                    
+                    messages.success(request, 'Payment request sent! Please check your phone and enter your M-Pesa PIN.')
+                    return redirect('store:order_status', order_id=order.id)
+                    
+                else:
+                    # STK Push failed
+                    error_message = result.get('error', 'Payment initiation failed')
+                    print(f"✗ STK Push failed: {error_message}")
+                    
+                    messages.error(request, f'Payment failed: {error_message}')
+                    order.status = 'failed'
+                    order.save()
+                    return redirect('store:checkout')
+                    
+            except Exception as e:
+                print(f"✗ Exception during M-Pesa processing: {str(e)}")
+                import traceback
+                traceback.print_exc()
+                
+                messages.error(request, f'Payment error: {str(e)}')
+                order.status = 'failed'
+                order.save()
+                return redirect('store:checkout')
+        
+        elif payment_method == 'cash':
+            print("\n--- PROCESSING CASH ON DELIVERY ---")
+            
+            # Mark order as confirmed for cash on delivery
+            order.status = 'confirmed'
+            order.save()
+            
+            print(f"✓ Cash on Delivery order confirmed: #{order.id}")
+            
+            # Clear the cart
+            request.session['cart'] = {}
+            request.session.modified = True
+            print("✓ Cart cleared")
+            
+            messages.success(request, 'Order placed successfully! You can pay when you receive your order.')
+            return redirect('store:order_status', order_id=order.id)
+        
+        else:
+            print(f"✗ Invalid payment method: {payment_method}")
+            messages.error(request, 'Invalid payment method selected')
+            order.delete()
+            return redirect('store:checkout')
+    
+    # ==================== GET REQUEST - SHOW CHECKOUT FORM ====================
+    print("\n--- CHECKOUT GET REQUEST ---")
+    
+    # Get user's default address if exists
     addresses = Address.objects.filter(user=request.user)
     default_address = addresses.filter(is_default=True).first()
     
-    # Calculate totals
-    tax = subtotal * Decimal('0.16')
-    shipping = Decimal('200') if subtotal < Decimal('5000') else Decimal('0')
-    total = subtotal + tax + shipping
-    
-    payment_method = request.GET.get('payment', 'cod')
-    
+    # Prepare context for template
     context = {
         'cart_items': cart_items,
         'addresses': addresses,
@@ -564,53 +752,399 @@ def checkout(request):
         'tax': tax,
         'shipping': shipping,
         'total': total,
-        'payment_method': payment_method,
+        'cart_items_count': len(cart_items),
     }
     
     return render(request, 'store/checkout.html', context)
 
-    cart = request.session.get('cart', {})
+
+def initiate_mpesa_payment(phone_number, amount, order_id):
+    """
+    Initiate M-Pesa STK Push payment
     
-    if not cart:
-        messages.warning(request, 'Your cart is empty.')
-        return redirect('store:cart')
+    Args:
+        phone_number (str): Customer phone number in format 254XXXXXXXXX
+        amount (int): Amount to charge in KES
+        order_id (int): Order ID for reference
     
-    cart_items = []
-    subtotal = 0
+    Returns:
+        dict: Result with 'success' boolean and data or 'error' message
+    """
+    print(f"\n{'='*60}")
+    print(f"INITIATING M-PESA STK PUSH")
+    print(f"{'='*60}")
+    print(f"Phone: {phone_number}")
+    print(f"Amount: Ksh {amount}")
+    print(f"Order ID: {order_id}")
     
-    for product_id, quantity in cart.items():
-        try:
-            product = Product.objects.get(id=product_id)
-            item_total = product.discounted_price * quantity
-            subtotal += item_total
-            cart_items.append({
-                'product': product,
-                'quantity': quantity,
-                'subtotal': item_total
-            })
-        except Product.DoesNotExist:
-            pass
+    try:
+        # Step 1: Get M-Pesa Access Token
+        print("\nStep 1: Getting M-Pesa access token...")
+        
+        token_url = "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
+        
+        consumer_key = settings.MPESA_CONSUMER_KEY
+        consumer_secret = settings.MPESA_CONSUMER_SECRET
+        
+        print(f"Consumer Key: {consumer_key[:15]}***")
+        
+        # Create basic auth credentials
+        credentials = f"{consumer_key}:{consumer_secret}"
+        encoded_credentials = base64.b64encode(credentials.encode()).decode('utf-8')
+        
+        headers = {
+            "Authorization": f"Basic {encoded_credentials}"
+        }
+        
+        token_response = requests.get(token_url, headers=headers, timeout=30)
+        
+        print(f"Token Response Status: {token_response.status_code}")
+        
+        if token_response.status_code != 200:
+            error_msg = f"Failed to get access token: {token_response.text}"
+            print(f"✗ {error_msg}")
+            return {
+                'success': False,
+                'error': error_msg
+            }
+        
+        token_data = token_response.json()
+        access_token = token_data.get('access_token')
+        
+        if not access_token:
+            print("✗ No access token in response")
+            return {
+                'success': False,
+                'error': 'Failed to obtain access token'
+            }
+        
+        print(f"✓ Access Token obtained: {access_token[:30]}...")
+        
+        # Step 2: Prepare STK Push Request
+        print("\nStep 2: Preparing STK Push request...")
+        
+        stk_push_url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
+        
+        timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+        business_short_code = settings.MPESA_SHORTCODE
+        passkey = settings.MPESA_PASSKEY
+        
+        print(f"Business Shortcode: {business_short_code}")
+        print(f"Timestamp: {timestamp}")
+        
+        # Generate password (base64 encoded: shortcode + passkey + timestamp)
+        password_string = f"{business_short_code}{passkey}{timestamp}"
+        password = base64.b64encode(password_string.encode()).decode('utf-8')
+        
+        # Prepare STK Push payload
+        payload = {
+            "BusinessShortCode": business_short_code,
+            "Password": password,
+            "Timestamp": timestamp,
+            "TransactionType": "CustomerPayBillOnline",
+            "Amount": amount,
+            "PartyA": phone_number,
+            "PartyB": business_short_code,
+            "PhoneNumber": phone_number,
+            "CallBackURL": f"{settings.MPESA_CALLBACK_URL}/mpesa/callback/",
+            "AccountReference": f"Order{order_id}",
+            "TransactionDesc": f"Payment for Order #{order_id}"
+        }
+        
+        print(f"STK Push Payload:")
+        print(f"  Amount: {payload['Amount']}")
+        print(f"  Phone: {payload['PhoneNumber']}")
+        print(f"  Reference: {payload['AccountReference']}")
+        print(f"  Callback: {payload['CallBackURL']}")
+        
+        headers = {
+            "Authorization": f"Bearer {access_token}",
+            "Content-Type": "application/json"
+        }
+        
+        # Step 3: Send STK Push Request
+        print("\nStep 3: Sending STK Push request...")
+        
+        stk_response = requests.post(
+            stk_push_url,
+            json=payload,
+            headers=headers,
+            timeout=30
+        )
+        
+        print(f"STK Push Response Status: {stk_response.status_code}")
+        print(f"STK Push Response: {stk_response.text}")
+        
+        stk_data = stk_response.json()
+        
+        # Check response
+        if stk_data.get('ResponseCode') == '0':
+            # Success
+            checkout_request_id = stk_data.get('CheckoutRequestID')
+            customer_message = stk_data.get('CustomerMessage', 'Please check your phone')
+            
+            print(f"\n{'='*60}")
+            print(f"✓ STK PUSH SENT SUCCESSFULLY!")
+            print(f"{'='*60}")
+            print(f"Checkout Request ID: {checkout_request_id}")
+            print(f"Customer Message: {customer_message}")
+            
+            return {
+                'success': True,
+                'checkout_request_id': checkout_request_id,
+                'message': customer_message
+            }
+        else:
+            # Failed
+            error_code = stk_data.get('errorCode', stk_data.get('ResponseCode'))
+            error_message = stk_data.get('errorMessage', stk_data.get('ResponseDescription', 'Unknown error'))
+            
+            print(f"\n{'='*60}")
+            print(f"✗ STK PUSH FAILED")
+            print(f"{'='*60}")
+            print(f"Error Code: {error_code}")
+            print(f"Error Message: {error_message}")
+            
+            return {
+                'success': False,
+                'error': error_message
+            }
     
-    # Get user's addresses
-    addresses = Address.objects.filter(user=request.user)
-    default_address = addresses.filter(is_default=True).first()
+    except requests.exceptions.Timeout:
+        error_msg = "Request timeout - M-Pesa server took too long to respond"
+        print(f"\n✗ {error_msg}")
+        return {
+            'success': False,
+            'error': error_msg
+        }
     
-    # Calculate totals
-    tax = subtotal * Decimal('0.16')
-    shipping = Decimal('200') if subtotal < Decimal('5000') else Decimal('0')
-    total = subtotal + tax + shipping
+    except requests.exceptions.ConnectionError:
+        error_msg = "Connection error - Could not reach M-Pesa server"
+        print(f"\n✗ {error_msg}")
+        return {
+            'success': False,
+            'error': error_msg
+        }
     
-    payment_method = request.GET.get('payment', 'cod')
+    except requests.exceptions.RequestException as e:
+        error_msg = f"Network error: {str(e)}"
+        print(f"\n✗ {error_msg}")
+        return {
+            'success': False,
+            'error': error_msg
+        }
+    
+    except Exception as e:
+        error_msg = f"Unexpected error: {str(e)}"
+        print(f"\n✗ {error_msg}")
+        import traceback
+        traceback.print_exc()
+        return {
+            'success': False,
+            'error': error_msg
+        }
+
+
+@login_required
+def order_status(request, order_id):
+    """Display order status page"""
+    order = get_object_or_404(Order, id=order_id, user=request.user)
     
     context = {
+        'order': order,
+    }
+    
+    return render(request, 'store/order_status.html', context)
+    """Checkout page with payment processing"""
+    
+    # Get cart items
+    # cart_items = cart_items.objects.filter(user=request.user)
+    cart_items = []
+    
+    if not cart:
+        messages.warning(request, 'Your cart is empty')
+        return redirect('store:cart')
+    
+    # Calculate totals
+    subtotal = sum(Decimal(str(item.product.price)) * item.quantity for item in cart_items)
+    tax = subtotal * Decimal('0.16')
+    shipping = Decimal('200.00')
+    total = subtotal + tax + shipping
+    
+    # ==================== CRITICAL: POST HANDLING ====================
+    if request.method == 'POST':
+        print("\n" + "="*60)
+        print("CHECKOUT POST RECEIVED")
+        print("="*60)
+        
+        # Get form data
+        first_name = request.POST.get('first_name', request.user.first_name)
+        last_name = request.POST.get('last_name', request.user.last_name)
+        email = request.POST.get('email', request.user.email)
+        phone = request.POST.get('phone', '')
+        address = request.POST.get('address', '')
+        city = request.POST.get('city', 'Nairobi')
+        postal_code = request.POST.get('postal_code', '')
+        notes = request.POST.get('notes', '')
+        payment_method = request.POST.get('payment_method', '')
+        mpesa_phone = request.POST.get('mpesa_phone', '').strip()
+        
+        print(f"Payment Method: {payment_method}")
+        print(f"M-Pesa Phone: {mpesa_phone}")
+        print(f"Total Amount: Ksh {total}")
+        
+        # Validate required fields
+        if not all([first_name, last_name, email, phone, address, city, payment_method]):
+            messages.error(request, 'Please fill in all required fields')
+            context = {
+                'cart_items': cart_items,
+                'subtotal': subtotal,
+                'tax': tax,
+                'shipping': shipping,
+                'total': total,
+                'cart_items_count': cart_items.count(),
+            }
+            return render(request, 'store/checkout.html', context)
+        
+
+        print("\n" + "="*50)
+        print("CHECKOUT POST RECEIVED")
+        print("="*50)
+        
+        # Get form data
+        payment_method = request.POST.get('payment_method')
+        mpesa_phone = request.POST.get('mpesa_phone', '').strip()
+        
+        print(f"Payment Method: {payment_method}")
+        print(f"M-Pesa Phone: {mpesa_phone}")
+        print(f"Total Amount: {total}")
+        
+        # Validate
+        if not payment_method:
+            messages.error(request, 'Please select a payment method')
+            return redirect('store:checkout')
+        
+        # Get shipping info
+        addresses = Address.objects.filter(user=request.user)
+        default_address = addresses.filter(is_default=True).first()
+        # first_name = request.POST.get('first_name', request.user.first_name)
+        # last_name = request.POST.get('last_name', request.user.last_name)
+        # email = request.POST.get('email', request.user.email)
+        # phone = request.POST.get('phone', '')
+        # address = request.POST.get('address', '')
+        # city = request.POST.get('city', 'Nairobi')
+        # postal_code = request.POST.get('postal_code', '')
+        # notes = request.POST.get('notes', '')
+        
+        # Create order
+        order = Order.objects.create(
+            # user=request.user,
+            # first_name=first_name,
+            # last_name=last_name,
+            # email=email,
+            # phone=phone,
+            # address=address,
+            # city=city,
+            # postal_code=postal_code,
+            # notes=notes,
+            subtotal=subtotal,
+            tax=tax,
+            shipping=shipping,
+            total=total,
+            # payment_method=payment_method,
+            status='pending'
+        )
+        
+        # Create order items
+        for cart_item in cart_items:
+            OrderItem.objects.create(
+                order=order,
+                product=cart_item.product,
+                quantity=cart_item.quantity,
+                price=cart_item.product.price
+            )
+        
+        print(f"Order created: #{order.id}")
+        
+        # Process payment
+        if payment_method == 'mpesa':
+            print("\n--- INITIATING M-PESA STK PUSH ---")
+            
+            if not mpesa_phone:
+                messages.error(request, 'Please provide M-Pesa phone number')
+                order.delete()
+                return redirect('store:checkout')
+            
+            # Format phone number
+            phone_number = mpesa_phone
+            if phone_number.startswith('0'):
+                phone_number = '254' + phone_number[1:]
+            elif phone_number.startswith('+254'):
+                phone_number = phone_number[1:]
+            elif not phone_number.startswith('254'):
+                phone_number = '254' + phone_number
+            
+            print(f"Formatted phone: {phone_number}")
+            
+            # Send STK Push
+            try:
+                result = initiate_mpesa_payment(
+                    phone_number=phone_number,
+                    amount=int(total),
+                    order_id=order.id
+                )
+                
+                print(f"M-Pesa Result: {result}")
+                
+                if result.get('success'):
+                    order.mpesa_checkout_request_id = result.get('checkout_request_id')
+                    order.save()
+                    
+                    # Clear cart
+                    cart_items.delete()
+                    
+                    messages.success(request, 'Check your phone to complete payment!')
+                    return redirect('store:order_status', order_id=order.id)
+                else:
+                    error_msg = result.get('error', 'Payment failed')
+                    print(f"ERROR: {error_msg}")
+                    messages.error(request, f'Payment failed: {error_msg}')
+                    order.status = 'failed'
+                    order.save()
+                    return redirect('store:checkout')
+                    
+            except Exception as e:
+                print(f"EXCEPTION: {str(e)}")
+                messages.error(request, f'Error: {str(e)}')
+                order.status = 'failed'
+                order.save()
+                return redirect('store:checkout')
+        
+        elif payment_method == 'cash':
+            print("\n--- CASH ON DELIVERY ---")
+            order.status = 'confirmed'
+            order.save()
+            
+            # Clear cart
+            cart_items.delete()
+            
+            messages.success(request, 'Order placed! Pay on delivery.')
+            return redirect('store:order_status', order_id=order.id)
+        
+        else:
+            messages.error(request, 'Invalid payment method')
+            order.delete()
+            return redirect('store:checkout')
+    
+    # GET request - show form
+    print("\n--- CHECKOUT GET REQUEST ---")
+    context = {
         'cart_items': cart_items,
-        'addresses': addresses,
-        'default_address': default_address,
         'subtotal': subtotal,
         'tax': tax,
         'shipping': shipping,
         'total': total,
-        'payment_method': payment_method,
+        'cart_items_count': cart_items.count(),
     }
     
     return render(request, 'store/checkout.html', context)

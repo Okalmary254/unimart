@@ -6,6 +6,8 @@ from requests.auth import HTTPBasicAuth
 import json
 import logging
 import os
+import re
+import traceback
 from django.conf import settings
 
 # Set up logging
@@ -61,9 +63,34 @@ class MpesaAPI:
         
         logger.info(f"MpesaAPI initialized in {self.environment} mode")
     
+    def extract_incapsula_id(self, html_response):
+        """
+        Extract Incapsula incident ID from HTML response
+        """
+        match = re.search(r'incident_id=([0-9-]+)', html_response)
+        if match:
+            return match.group(1)
+        return "Unknown"
+    
+    def check_incapsula_block(self, response):
+        """
+        Check if response is an Incapsula firewall block
+        """
+        if response.status_code == 403:
+            indicators = [
+                'Incapsula',
+                '_Incapsula_Resource',
+                'Request unsuccessful',
+                'incident_id'
+            ]
+            for indicator in indicators:
+                if indicator in response.text:
+                    return True
+        return False
+    
     def get_access_token(self):
         """
-        Generate OAuth access token
+        Generate OAuth access token with Incapsula firewall detection
         
         Returns:
             str: Access token or None if failed
@@ -78,12 +105,39 @@ class MpesaAPI:
             
             logger.info(f"Token response status: {response.status_code}")
             
-            if response.status_code != 200:
-                logger.error(f"Failed to get token: {response.text}")
+            # Check for Incapsula firewall block
+            if self.check_incapsula_block(response):
+                incident_id = self.extract_incapsula_id(response.text)
+                logger.error("🚫 INCAPSULA FIREWALL BLOCK DETECTED")
+                logger.error(f"Incapsula Incident ID: {incident_id}")
+                logger.error("Solutions:")
+                logger.error("1. Wait 15-30 minutes and try again")
+                logger.error("2. Change your IP address (use VPN or mobile hotspot)")
+                logger.error("3. Use Pesa Playground for local development")
                 return None
             
-            response.raise_for_status()
-            result = response.json()
+            # Check for non-200 responses
+            if response.status_code != 200:
+                logger.error(f"Failed to get token: Status {response.status_code}")
+                logger.error(f"Response body: {response.text[:500]}")  # Log first 500 chars
+                
+                # Check for rate limiting
+                if response.status_code == 429:
+                    logger.error("Rate limited by Safaricom API. Too many requests.")
+                elif response.status_code == 401:
+                    logger.error("Authentication failed. Check your Consumer Key/Secret.")
+                elif response.status_code == 500:
+                    logger.error("Safaricom internal server error. Their servers might be down.")
+                
+                return None
+            
+            # Try to parse JSON response
+            try:
+                result = response.json()
+            except json.JSONDecodeError as e:
+                logger.error(f"Failed to parse JSON response: {e}")
+                logger.error(f"Raw response: {response.text[:200]}")
+                return None
             
             access_token = result.get('access_token')
             if access_token:
@@ -91,24 +145,26 @@ class MpesaAPI:
                 return access_token
             else:
                 logger.error("No access token in response")
+                logger.error(f"Response keys: {result.keys()}")
                 return None
                 
         except requests.exceptions.Timeout:
-            logger.error("Timeout while getting access token")
+            logger.error("Timeout while getting access token (30s exceeded)")
             return None
-        except requests.exceptions.ConnectionError:
-            logger.error("Connection error while getting access token")
+        except requests.exceptions.ConnectionError as e:
+            logger.error(f"Connection error while getting access token: {e}")
             return None
         except requests.exceptions.HTTPError as e:
             logger.error(f"HTTP error getting access token: {e}")
-            return None
-        except json.JSONDecodeError as e:
-            logger.error(f"JSON decode error: {e}")
+            if hasattr(e, 'response') and e.response is not None:
+                logger.error(f"Response status: {e.response.status_code}")
+                logger.error(f"Response body: {e.response.text[:500]}")
             return None
         except Exception as e:
             logger.error(f"Unexpected error getting access token: {e}")
+            logger.error(traceback.format_exc())
             return None
-    
+
     def generate_password(self):
         """
         Generate password for STK push
@@ -141,14 +197,8 @@ class MpesaAPI:
         Returns:
             dict: Response from M-Pesa API
         """
-        # Use provided callback_url or build from base
-        callback_url = callback_url or self.callback_url or getattr(settings, 'MPESA_CALLBACK_URL', '')
-        if callback_url:
-            final_callback_url = callback_url
-        elif self.callback_url:
-            final_callback_url = f"{self.callback_url}/mpesa/callback/"
-        else:
-            final_callback_url = getattr(settings, 'MPESA_CALLBACK_URL', '')
+        # Use provided callback_url or from settings
+        final_callback_url = callback_url or self.callback_url or getattr(settings, 'MPESA_CALLBACK_URL', '')
         
         # Validate callback URL for production
         if self.environment == 'production' and ('localhost' in final_callback_url or '127.0.0.1' in final_callback_url or 'ngrok' in final_callback_url):
@@ -174,7 +224,7 @@ class MpesaAPI:
         if not access_token:
             return {
                 'success': False,
-                'message': 'Failed to get access token',
+                'message': 'Failed to get access token. M-Pesa service temporarily unavailable.',
                 'error_type': 'auth_error'
             }
         
@@ -213,6 +263,17 @@ class MpesaAPI:
             )
             
             logger.info(f"STK Push response status: {response.status_code}")
+            
+            # Check for Incapsula block in STK response
+            if self.check_incapsula_block(response):
+                incident_id = self.extract_incapsula_id(response.text)
+                logger.error(f"🚫 INCAPSULA BLOCK DETECTED in STK Push. Incident: {incident_id}")
+                return {
+                    'success': False,
+                    'message': 'Payment service temporarily unavailable. Please try again later.',
+                    'error_type': 'firewall_block',
+                    'incident_id': incident_id
+                }
             
             if response.status_code != 200:
                 error_msg = f"STK Push failed with status {response.status_code}"
@@ -264,8 +325,8 @@ class MpesaAPI:
                 'message': 'Request timeout - please try again',
                 'error_type': 'timeout_error'
             }
-        except requests.exceptions.ConnectionError:
-            logger.error("Connection error during STK Push")
+        except requests.exceptions.ConnectionError as e:
+            logger.error(f"Connection error during STK Push: {e}")
             return {
                 'success': False,
                 'message': 'Network connection error - please check your internet',
@@ -287,6 +348,7 @@ class MpesaAPI:
             }
         except Exception as e:
             logger.error(f"Unexpected error during STK Push: {e}")
+            logger.error(traceback.format_exc())
             return {
                 'success': False,
                 'message': f'Unexpected error: {str(e)}',
@@ -334,6 +396,18 @@ class MpesaAPI:
         
         try:
             response = requests.post(self.query_url, json=payload, headers=headers, timeout=30)
+            
+            # Check for Incapsula block
+            if self.check_incapsula_block(response):
+                incident_id = self.extract_incapsula_id(response.text)
+                logger.error(f"🚫 INCAPSULA BLOCK DETECTED in status query. Incident: {incident_id}")
+                return {
+                    'success': False,
+                    'message': 'Status query temporarily unavailable',
+                    'error_type': 'firewall_block',
+                    'incident_id': incident_id
+                }
+            
             response.raise_for_status()
             result = response.json()
             
