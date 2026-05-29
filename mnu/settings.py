@@ -25,7 +25,6 @@ CSRF_TRUSTED_ORIGINS = [
     'https://127.0.0.1:5173',
     'https://localhost:5174',
     'https://127.0.0.1:5174',
-    'https://afrikanbikers.onrender.com',
      #'*',
     #'ngrok.io',
 ]
@@ -36,7 +35,7 @@ CSRF_TRUSTED_ORIGINS = [
 #     '31ab-197-138-81-100.ngrok-free.app',
 #     '.ngrok-free.app',  
 # ]
-ALLOWED_HOSTS = ['*', 'https://afrikanbikers.onrender.com']
+ALLOWED_HOSTS = ['*']
 # ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
 INSTALLED_APPS = [
@@ -93,8 +92,7 @@ SIMPLE_JWT = {
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5174',  # Vite dev server
     'http://127.0.0.1:5174',
-    'https://afrikanbikers.onrender.com',
- 
+
 ]
 CORS_ALLOW_CREDENTIALS = True
 
