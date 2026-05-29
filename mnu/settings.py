@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from tkinter import FALSE
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -14,7 +15,7 @@ AUTH_USER_MODEL = os.getenv('AUTH_USER_MODEL', 'accounts.User')
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # DEBUG = os.getenv('DEBUG', 'False') == 'True'
-DEBUG = True
+DEBUG = FALSE
 
 CSRF_TRUSTED_ORIGINS = [
     'https://31ab-197-138-81-100.ngrok-free.app',
