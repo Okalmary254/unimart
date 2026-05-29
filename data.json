@@ -78,4 +78,409 @@
     "session_data": "eyJjYXJ0Ijp7IjMiOjF9fQ:1wNHDJ:w_oa5naIjqZNW1AKme1xFX7PopR4qUtfJyKV0KG-cAQ",
     "expire_date": "2026-05-27T21:33:57.915Z"
   }
+},
+{
+  "model": "store.profile",
+  "pk": 1,
+  "fields": {
+    "user": 1,
+    "phone": "0743874690",
+    "biker_id": null,
+    "date_of_birth": null,
+    "avatar": "",
+    "email_orders": true,
+    "email_promotions": false,
+    "sms_notifications": false,
+    "keep_logged_in": true,
+    "public_profile": false,
+    "created_at": "2026-05-12T16:22:07.072Z",
+    "updated_at": "2026-05-12T16:26:01.776Z"
+  }
+},
+{
+  "model": "store.profile",
+  "pk": 2,
+  "fields": {
+    "user": 2,
+    "phone": "",
+    "biker_id": null,
+    "date_of_birth": null,
+    "avatar": "",
+    "email_orders": true,
+    "email_promotions": false,
+    "sms_notifications": false,
+    "keep_logged_in": true,
+    "public_profile": false,
+    "created_at": "2026-05-12T19:31:36.143Z",
+    "updated_at": "2026-05-12T19:33:39.709Z"
+  }
+},
+{
+  "model": "store.category",
+  "pk": 1,
+  "fields": {
+    "name": "Cruisers",
+    "slug": "cruisers",
+    "description": "",
+    "created_at": "2026-05-12T16:31:25.637Z"
+  }
+},
+{
+  "model": "store.category",
+  "pk": 2,
+  "fields": {
+    "name": "Sports bike",
+    "slug": "sportsadventure-bike",
+    "description": "",
+    "created_at": "2026-05-12T16:31:56.828Z"
+  }
+},
+{
+  "model": "store.category",
+  "pk": 3,
+  "fields": {
+    "name": "Adventure bike",
+    "slug": "adventure-bike",
+    "description": "",
+    "created_at": "2026-05-12T16:32:43.831Z"
+  }
+},
+{
+  "model": "store.category",
+  "pk": 4,
+  "fields": {
+    "name": "Touring",
+    "slug": "touring",
+    "description": "",
+    "created_at": "2026-05-12T16:33:02.850Z"
+  }
+},
+{
+  "model": "store.category",
+  "pk": 5,
+  "fields": {
+    "name": "Naked bikes",
+    "slug": "naked-bikes",
+    "description": "",
+    "created_at": "2026-05-12T16:33:28.250Z"
+  }
+},
+{
+  "model": "store.product",
+  "pk": 1,
+  "fields": {
+    "category": 1,
+    "name": "Harley Davidson",
+    "description": "The Cruiser is the quintessential Harley-Davidson, defined by its \"low and slow\" philosophy. It is designed for riders who prioritize style, customisation, and a relaxed, laid-back riding experience on city streets or country roads.",
+    "price": "800000.00",
+    "image": "products/harley.jpeg",
+    "stock": 4,
+    "is_featured": true,
+    "is_new": true,
+    "discount_percentage": "10.00",
+    "created_at": "2026-05-12T16:37:20.135Z",
+    "updated_at": "2026-05-12T16:37:20.135Z"
+  }
+},
+{
+  "model": "store.product",
+  "pk": 2,
+  "fields": {
+    "category": 4,
+    "name": "Chopper",
+    "description": "A Chopper is a highly customized motorcycle known for its radical, \"stretched-out\" appearance. The name comes from the 1950s and 60s practice of literally \"chopping\" and welding an original motorcycle frame to change its geometry.",
+    "price": "500000.00",
+    "image": "products/chopper.jpeg",
+    "stock": 5,
+    "is_featured": true,
+    "is_new": true,
+    "discount_percentage": "5.00",
+    "created_at": "2026-05-12T19:07:41.934Z",
+    "updated_at": "2026-05-12T19:07:41.934Z"
+  }
+},
+{
+  "model": "store.product",
+  "pk": 3,
+  "fields": {
+    "category": 2,
+    "name": "Kawasaki Ninja",
+    "description": "The Kawasaki Ninja series is one of the most iconic brands in motorcycling, defined by its aerodynamic full fairings, aggressive styling, and a heritage of track-bred performance. While the name is synonymous with speed, the lineup is actually divided into three distinct categories based on riding style and engine technology:",
+    "price": "100000.00",
+    "image": "products/sports.jpeg",
+    "stock": 4,
+    "is_featured": true,
+    "is_new": true,
+    "discount_percentage": "0.00",
+    "created_at": "2026-05-12T19:11:11.264Z",
+    "updated_at": "2026-05-12T19:11:11.264Z"
+  }
+},
+{
+  "model": "store.product",
+  "pk": 4,
+  "fields": {
+    "category": 1,
+    "name": "Boxer BM X125",
+    "description": "250cc",
+    "price": "250000.00",
+    "image": "products/boxer.jpeg",
+    "stock": 5,
+    "is_featured": true,
+    "is_new": true,
+    "discount_percentage": "0.00",
+    "created_at": "2026-05-12T19:29:48.810Z",
+    "updated_at": "2026-05-12T19:29:48.810Z"
+  }
+},
+{
+  "model": "store.order",
+  "pk": 1,
+  "fields": {
+    "user": 2,
+    "order_number": "ORD20260514113337217",
+    "created_at": "2026-05-14T08:33:37.341Z",
+    "updated_at": "2026-05-14T08:33:37.342Z",
+    "status": "processing",
+    "subtotal": "720000.00",
+    "tax": "115200.00",
+    "shipping": "200.00",
+    "total": "835400.00",
+    "shipping_address": "mo, Nairobi",
+    "shipping_phone": "0743874690"
+  }
+},
+{
+  "model": "store.order",
+  "pk": 2,
+  "fields": {
+    "user": 2,
+    "order_number": "ORD20260514121052810",
+    "created_at": "2026-05-14T09:10:52.362Z",
+    "updated_at": "2026-05-14T09:10:52.363Z",
+    "status": "processing",
+    "subtotal": "720000.00",
+    "tax": "115200.00",
+    "shipping": "200.00",
+    "total": "835400.00",
+    "shipping_address": "moi, Nairobi",
+    "shipping_phone": "0743874690"
+  }
+},
+{
+  "model": "store.orderitem",
+  "pk": 1,
+  "fields": {
+    "order": 1,
+    "product": 1,
+    "quantity": 1,
+    "price": "800000.00"
+  }
+},
+{
+  "model": "store.orderitem",
+  "pk": 2,
+  "fields": {
+    "order": 2,
+    "product": 1,
+    "quantity": 1,
+    "price": "800000.00"
+  }
+},
+{
+  "model": "store.sitesettings",
+  "pk": 1,
+  "fields": {
+    "site_name": "AfrikanBikers",
+    "hero_text": "",
+    "about_text": "",
+    "contact_email": "info@afrikanbikers.com",
+    "contact_phone": "+2547 4387 4690",
+    "contact_address": "Industrial Area, Nairobi",
+    "business_hours": "Mon-Fri: 8am - 6pm",
+    "facebook": "",
+    "instagram": "",
+    "twitter": "",
+    "whatsapp": "",
+    "maintainer_name": "Jean Marie",
+    "maintainer_url": "https://okalmjohn.netlify.app"
+  }
+},
+{
+  "model": "accounts.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$c1XerXegS0WWnRn7LperAi$x2AMFJ5KJzEBY518G2rpaZnd3l0dAHa89cA55ojUnKw=",
+    "last_login": "2026-05-12T16:24:39.165Z",
+    "is_superuser": true,
+    "username": "jones",
+    "first_name": "Jean",
+    "last_name": "Marie",
+    "email": "okalmohn18@gmail.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-05-12T16:22:06.308Z",
+    "role": "student",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "pk": 2,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$eRYbQfgVGDgl4XOYv9uESQ$N/kP9YWfG9GthIMfYImS3Tz1yqJ5v3AwYfw/0zpym48=",
+    "last_login": "2026-05-12T19:33:39.705Z",
+    "is_superuser": false,
+    "username": "EliudArsene",
+    "first_name": "Eliud",
+    "last_name": "Arsene",
+    "email": "eliud@afrikanbikers.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-05-12T19:31:36.134Z",
+    "role": "student",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 1,
+  "fields": {
+    "user": 2,
+    "jti": "fd06d72ec757425e841101336dd69efa",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc3OTMxMjQ2MSwiaWF0IjoxNzc4NzA3NjYxLCJqdGkiOiJmZDA2ZDcyZWM3NTc0MjVlODQxMTAxMzM2ZGQ2OWVmYSIsInVzZXJfaWQiOiIyIn0.EAj8SkQ4fa7-Td326O2ioxiLHKPt-fufR-gniyfpYrs",
+    "created_at": "2026-05-13T21:27:41.175Z",
+    "expires_at": "2026-05-20T21:27:41Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 2,
+  "fields": {
+    "user": 2,
+    "jti": "73b7f8c9a58248b092bff8b6c013067b",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc3OTMxNzIxNCwiaWF0IjoxNzc4NzEyNDE0LCJqdGkiOiI3M2I3ZjhjOWE1ODI0OGIwOTJiZmY4YjZjMDEzMDY3YiIsInVzZXJfaWQiOiIyIn0.q38VBLnfpb1keOXgW28ANnrZozBCeLrwA3GDR4iLRpo",
+    "created_at": "2026-05-13T22:46:54.895Z",
+    "expires_at": "2026-05-20T22:46:54Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 3,
+  "fields": {
+    "user": 2,
+    "jti": "6b9c33674eb74730b6bf7ce2177056f6",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc3OTMxNzIxNCwiaWF0IjoxNzc4NzEyNDE0LCJqdGkiOiI2YjljMzM2NzRlYjc0NzMwYjZiZjdjZTIxNzcwNTZmNiIsInVzZXJfaWQiOiIyIn0.kjYzyBv8Bbomf4n5itermEHQbjslLEN6yxPPcQ2pP2A",
+    "created_at": "2026-05-13T22:46:54.898Z",
+    "expires_at": "2026-05-20T22:46:54Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 4,
+  "fields": {
+    "user": 2,
+    "jti": "4e9fbb9f35dc4a20b10b030b396ce9f6",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc3OTMxNzIxNCwiaWF0IjoxNzc4NzEyNDE0LCJqdGkiOiI0ZTlmYmI5ZjM1ZGM0YTIwYjEwYjAzMGIzOTZjZTlmNiIsInVzZXJfaWQiOiIyIn0.-BZ-w_x-y5iozpOP4zbiC-V6KT3Cc_vbgwoIvTqcf0E",
+    "created_at": "2026-05-13T22:46:54.886Z",
+    "expires_at": "2026-05-20T22:46:54Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 5,
+  "fields": {
+    "user": 2,
+    "jti": "187562298a714b4cad4fc6a4b7e184b4",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc3OTMxNzIxNCwiaWF0IjoxNzc4NzEyNDE0LCJqdGkiOiIxODc1NjIyOThhNzE0YjRjYWQ0ZmM2YTRiN2UxODRiNCIsInVzZXJfaWQiOiIyIn0.-tJv1xaEghohO3BMSlMyJbq6x1VrnZWNcWIz3Ir3dZQ",
+    "created_at": "2026-05-13T22:46:54.891Z",
+    "expires_at": "2026-05-20T22:46:54Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 6,
+  "fields": {
+    "user": 2,
+    "jti": "81368d18fa03406f92616b24e53913a7",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc3OTM1MjI5OCwiaWF0IjoxNzc4NzQ3NDk4LCJqdGkiOiI4MTM2OGQxOGZhMDM0MDZmOTI2MTZiMjRlNTM5MTNhNyIsInVzZXJfaWQiOiIyIn0.AWoyZWBfCrEG8uEqQw2oofTaKrMV07UTPSrK3CsfIao",
+    "created_at": "2026-05-14T08:31:38.390Z",
+    "expires_at": "2026-05-21T08:31:38Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 7,
+  "fields": {
+    "user": 2,
+    "jti": "637af605db0d4125be90395be875f0bd",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc3OTM1NDU4NCwiaWF0IjoxNzc4NzQ5Nzg0LCJqdGkiOiI2MzdhZjYwNWRiMGQ0MTI1YmU5MDM5NWJlODc1ZjBiZCIsInVzZXJfaWQiOiIyIn0.-HbzNlrF6AYNc95ipKeIiC70P3pIDq1GWbxJdAnPHxo",
+    "created_at": "2026-05-14T09:09:44.204Z",
+    "expires_at": "2026-05-21T09:09:44Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 8,
+  "fields": {
+    "user": 2,
+    "jti": "fbad019339334acca514a7deed3d0514",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc3OTM1NDYwNiwiaWF0IjoxNzc4NzQ5ODA2LCJqdGkiOiJmYmFkMDE5MzM5MzM0YWNjYTUxNGE3ZGVlZDNkMDUxNCIsInVzZXJfaWQiOiIyIn0.I-DfL91iKdWQZGygWwoLhCetYmBiN1NkgnsXShggnM0",
+    "created_at": "2026-05-14T09:10:06.263Z",
+    "expires_at": "2026-05-21T09:10:06Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 9,
+  "fields": {
+    "user": 2,
+    "jti": "bf226fc574384a06befef50085f30f5d",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc3OTM1NDg3NCwiaWF0IjoxNzc4NzUwMDc0LCJqdGkiOiJiZjIyNmZjNTc0Mzg0YTA2YmVmZWY1MDA4NWYzMGY1ZCIsInVzZXJfaWQiOiIyIn0.dNrrLFNfJ74c2AjUAKDpOHn460an9U-oT47JjkJWVGA",
+    "created_at": "2026-05-14T09:14:34.044Z",
+    "expires_at": "2026-05-21T09:14:34Z"
+  }
+},
+{
+  "model": "token_blacklist.blacklistedtoken",
+  "pk": 1,
+  "fields": {
+    "token": 1,
+    "blacklisted_at": "2026-05-13T22:46:58.018Z"
+  }
+},
+{
+  "model": "token_blacklist.blacklistedtoken",
+  "pk": 2,
+  "fields": {
+    "token": 6,
+    "blacklisted_at": "2026-05-14T08:34:42.414Z"
+  }
+},
+{
+  "model": "token_blacklist.blacklistedtoken",
+  "pk": 3,
+  "fields": {
+    "token": 7,
+    "blacklisted_at": "2026-05-14T09:09:48.943Z"
+  }
+},
+{
+  "model": "token_blacklist.blacklistedtoken",
+  "pk": 4,
+  "fields": {
+    "token": 8,
+    "blacklisted_at": "2026-05-14T09:14:22.089Z"
+  }
+},
+{
+  "model": "token_blacklist.blacklistedtoken",
+  "pk": 5,
+  "fields": {
+    "token": 9,
+    "blacklisted_at": "2026-05-14T09:14:36.052Z"
+  }
 }
+]
