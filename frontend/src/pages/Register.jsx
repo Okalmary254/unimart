@@ -4,7 +4,6 @@ import { register } from '../api'
 import useAuthStore from '../store/authStore'
 import useCartStore from '../store/cartStore'
 
-// ✅ Field is outside Register — stable across renders, no focus loss
 const Field = ({ name, label, placeholder, icon, type = 'text', showToggle, show, onToggle, form, errors, setForm, setErrors }) => (
   <div>
     <label style={{ display: 'block', fontWeight: 600, color: '#1a1a1a', marginBottom: '0.4rem', fontSize: '0.88rem' }}>
