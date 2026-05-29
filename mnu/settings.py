@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 #from tkinter import FALSE
 from dotenv import load_dotenv
+import dj_database_url 
 
 load_dotenv()
 
@@ -124,15 +125,21 @@ TEMPLATES = [
 WSGI_APPLICATION = 'mnu.wsgi.application'
 
 DATABASES = {
-    'default': {
-        'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.sqlite3'),
-        'NAME': os.getenv('DB_NAME', BASE_DIR / 'db.sqlite3'),
-        'USER': os.getenv('DB_USER', ''),
-        'PASSWORD': os.getenv('DB_PASSWORD', ''),
-        'HOST': os.getenv('DB_HOST', ''),
-        'PORT': os.getenv('DB_PORT', ''),
-    }
+    'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL'),
+        conn_max_age=600,
+    )
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.sqlite3'),
+#         'NAME': os.getenv('DB_NAME', BASE_DIR / 'db.sqlite3'),
+#         'USER': os.getenv('DB_USER', ''),
+#         'PASSWORD': os.getenv('DB_PASSWORD', ''),
+#         'HOST': os.getenv('DB_HOST', ''),
+#         'PORT': os.getenv('DB_PORT', ''),
+#     }
+# }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
