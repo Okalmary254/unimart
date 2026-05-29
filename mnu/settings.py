@@ -93,6 +93,7 @@ SIMPLE_JWT = {
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5174',  # Vite dev server
     'http://127.0.0.1:5174',
+    'https://aafrikanbikers.onrender.com',  # Production URL
 
 ]
 CORS_ALLOW_CREDENTIALS = True

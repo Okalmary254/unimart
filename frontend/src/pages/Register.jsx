@@ -4,6 +4,57 @@ import { register } from '../api'
 import useAuthStore from '../store/authStore'
 import useCartStore from '../store/cartStore'
 
+// ✅ Field is outside Register — stable across renders, no focus loss
+const Field = ({ name, label, placeholder, icon, type = 'text', showToggle, show, onToggle, form, errors, setForm, setErrors }) => (
+  <div>
+    <label style={{ display: 'block', fontWeight: 600, color: '#1a1a1a', marginBottom: '0.4rem', fontSize: '0.88rem' }}>
+      {label}
+    </label>
+    <div style={{ position: 'relative' }}>
+      <i
+        className={`fas ${icon}`}
+        style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: '#22c55e', fontSize: '0.85rem', pointerEvents: 'none' }}
+      ></i>
+      <input
+        type={showToggle ? (show ? 'text' : 'password') : type}
+        value={form[name]}
+        onChange={e => {
+          setForm(f => ({ ...f, [name]: e.target.value }))
+          setErrors(er => ({ ...er, [name]: '' }))
+        }}
+        placeholder={placeholder}
+        style={{
+          width: '100%',
+          padding: '0.85rem 0.85rem 0.85rem 2.75rem',
+          paddingRight: showToggle ? '2.75rem' : '0.85rem',
+          border: `1.5px solid ${errors[name] ? '#e74c3c' : '#e5e7eb'}`,
+          borderRadius: '6px',
+          fontSize: '0.9rem',
+          outline: 'none',
+          transition: 'border-color 0.2s',
+          fontFamily: 'inherit',
+        }}
+        onFocus={e => e.target.style.borderColor = '#22c55e'}
+        onBlur={e => e.target.style.borderColor = errors[name] ? '#e74c3c' : '#e5e7eb'}
+      />
+      {showToggle && (
+        <button
+          type="button"
+          onClick={onToggle}
+          style={{ position: 'absolute', right: '0.85rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: '#888', cursor: 'pointer', fontSize: '0.85rem' }}
+        >
+          <i className={`fas ${show ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+        </button>
+      )}
+    </div>
+    {errors[name] && (
+      <p style={{ color: '#e74c3c', fontSize: '0.75rem', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+        <i className="fas fa-exclamation-circle"></i> {errors[name]}
+      </p>
+    )}
+  </div>
+)
+
 export default function Register() {
   const [form, setForm] = useState({
     first_name: '', last_name: '', username: '', email: '', password: '', confirm_password: '',
@@ -55,46 +106,8 @@ export default function Register() {
     }
   }
 
-  const inputStyle = (hasError) => ({
-    width: '100%',
-    padding: '0.85rem 0.85rem 0.85rem 2.75rem',
-    border: `1.5px solid ${hasError ? '#e74c3c' : '#e5e7eb'}`,
-    borderRadius: '6px',
-    fontSize: '0.9rem',
-    outline: 'none',
-    transition: 'border-color 0.2s',
-    fontFamily: 'inherit',
-  })
-
-  const Field = ({ name, label, placeholder, icon, type = 'text', showToggle, show, onToggle }) => (
-    <div>
-      <label style={{ display: 'block', fontWeight: 600, color: '#1a1a1a', marginBottom: '0.4rem', fontSize: '0.88rem' }}>
-        {label}
-      </label>
-      <div style={{ position: 'relative' }}>
-        <i className={`fas ${icon}`} style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: '#22c55e', fontSize: '0.85rem', pointerEvents: 'none' }}></i>
-        <input
-          type={showToggle ? (show ? 'text' : 'password') : type}
-          value={form[name]}
-          onChange={e => { setForm(f => ({ ...f, [name]: e.target.value })); setErrors(er => ({ ...er, [name]: '' })) }}
-          placeholder={placeholder}
-          style={{ ...inputStyle(errors[name]), paddingRight: showToggle ? '2.75rem' : '0.85rem' }}
-          onFocus={e => e.target.style.borderColor = '#22c55e'}
-          onBlur={e => e.target.style.borderColor = errors[name] ? '#e74c3c' : '#e5e7eb'}
-        />
-        {showToggle && (
-          <button type="button" onClick={onToggle} style={{ position: 'absolute', right: '0.85rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: '#888', cursor: 'pointer', fontSize: '0.85rem' }}>
-            <i className={`fas ${show ? 'fa-eye-slash' : 'fa-eye'}`}></i>
-          </button>
-        )}
-      </div>
-      {errors[name] && (
-        <p style={{ color: '#e74c3c', fontSize: '0.75rem', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-          <i className="fas fa-exclamation-circle"></i> {errors[name]}
-        </p>
-      )}
-    </div>
-  )
+  // Shared props passed down to every Field
+  const fieldProps = { form, errors, setForm, setErrors }
 
   return (
     <div style={{
@@ -142,14 +155,15 @@ export default function Register() {
 
             {/* Name row */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-              <Field name="first_name" label="First Name" placeholder="First name" icon="fa-user" />
-              <Field name="last_name" label="Last Name" placeholder="Last name" icon="fa-user" />
+              <Field {...fieldProps} name="first_name" label="First Name" placeholder="First name" icon="fa-user" />
+              <Field {...fieldProps} name="last_name" label="Last Name" placeholder="Last name" icon="fa-user" />
             </div>
 
-            <Field name="username" label="Username" placeholder="Choose a username" icon="fa-at" />
-            <Field name="email" label="Email Address" placeholder="your@email.com" icon="fa-envelope" type="email" />
+            <Field {...fieldProps} name="username" label="Username" placeholder="Choose a username" icon="fa-at" />
+            <Field {...fieldProps} name="email" label="Email Address" placeholder="your@email.com" icon="fa-envelope" type="email" />
 
             <Field
+              {...fieldProps}
               name="password" label="Password" placeholder="Min. 8 characters" icon="fa-lock"
               showToggle show={showPassword} onToggle={() => setShowPassword(s => !s)}
             />
@@ -171,6 +185,7 @@ export default function Register() {
             )}
 
             <Field
+              {...fieldProps}
               name="confirm_password" label="Confirm Password" placeholder="Repeat your password" icon="fa-lock"
               showToggle show={showConfirm} onToggle={() => setShowConfirm(s => !s)}
             />
