@@ -197,7 +197,7 @@ export default function About() {
             <div>
               <h3 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#1a1a1a', marginBottom: '1rem' }}>How We Started</h3>
               <p style={{ color: '#666', lineHeight: 1.8, marginBottom: '1rem' }}>
-                Founded in 2025 by a group of passionate riders and tech bikers at Mama Ngina University, AfrikanBikers was born out of frustration -- finding quality bikes and genuine parts in Kenya was too hard, too expensive, and too unreliable.
+                Founded in 2025 by a group of passionate riders and tech bikers in Nairobi, AfrikanBikers was born out of frustration -- finding quality bikes and genuine parts in Kenya was too hard, too expensive, and too unreliable.
               </p>
               <p style={{ color: '#666', lineHeight: 1.8, marginBottom: '1rem' }}>
                 We set out to change that. Starting with a small inventory of cruisers and sports bikes, we built relationships with verified dealers and importers across Kenya, so every listing on our platform is guaranteed authentic.
