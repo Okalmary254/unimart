@@ -46,7 +46,7 @@ class Migration(migrations.Migration):
                 ('site_name', models.CharField(default='UniMart', max_length=100)),
                 ('contact_email', models.EmailField(default='info@mnustore.ac.ke', max_length=254)),
                 ('contact_phone', models.CharField(default='+2547 4387 4690', max_length=20)),
-                ('contact_address', models.CharField(default='Mama Ngina University', max_length=255)),
+                ('contact_address', models.CharField(default='Kenyatta University', max_length=255)),
                 ('business_hours', models.CharField(default='Mon-Fri: 8am - 6pm', max_length=100)),
                 ('facebook', models.URLField(blank=True)),
                 ('instagram', models.URLField(blank=True)),
@@ -126,7 +126,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('phone', models.CharField(blank=True, max_length=15)),
-                ('student_id', models.CharField(blank=True, max_length=50, unique=True)),
+                ('biker_id', models.CharField(blank=True, max_length=50, unique=True)),
                 ('date_of_birth', models.DateField(blank=True, null=True)),
                 ('avatar', models.ImageField(blank=True, null=True, upload_to='avatars/')),
                 ('email_orders', models.BooleanField(default=True)),

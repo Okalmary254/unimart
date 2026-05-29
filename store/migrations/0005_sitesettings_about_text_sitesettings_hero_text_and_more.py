@@ -36,7 +36,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='sitesettings',
             name='contact_address',
-            field=models.CharField(default='Mama Ngina University', max_length=255),
+            field=models.CharField(default='Kenyatta University', max_length=255),
         ),
         migrations.AlterField(
             model_name='sitesettings',

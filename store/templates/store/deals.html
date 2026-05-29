@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hot Deals - UniMart</title>
+    <title>Hot Deals - AfrikanBikers</title>
     <!-- Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -1339,13 +1339,13 @@
                         <div class="coupon-icon">
                             <i class="fas fa-gift"></i>
                         </div>
-                        <h3>Student Special</h3>
+                        <h3>Biker Special</h3>
                         <p>Get 20% off on all stationery</p>
-                        <div class="coupon-code">STUDENT20</div>
+                        <div class="coupon-code">BIKER20</div>
                         <div class="coupon-expiry">
                             <i class="fas fa-calendar-alt"></i> Expires: Mar 31, 2026
                         </div>
-                        <button class="copy-btn" onclick="copyCoupon('STUDENT20')">
+                        <button class="copy-btn" onclick="copyCoupon('BIKER20')">
                             <i class="fas fa-copy"></i> Copy Code
                         </button>
                     </div>
@@ -1409,7 +1409,7 @@
         <div class="footer-content">
             <!-- <div class="footer-section">
                 <h3><i class="fas fa-store"></i> About UniMart</h3>
-                <p>Your one-stop shop for all products. We offer quality items at affordable prices for students and staff.</p>
+                <p>Your one-stop shop for all products. We offer quality items at affordable prices for bikers and staff.</p>
                 <div class="social-links">
                     <a href="https://www.instagram.com/phil.anth.ropist"><i class="fab fa-instagram"></i></a>
                     <a href="https://x.com/jean__marie_"><i class="fab fa-twitter"></i></a>
@@ -1417,8 +1417,8 @@
                 </div>
             </div> -->
             <div class="footer-section">
-                <h3><i class="fas fa-store"></i> About {% if site_settings %}{{ site_settings.site_name }}{% else %}UniMart{% endif %}</h3>
-                <p>{{ site_settings.about_text|default:"Your one-stop shop for all products. We offer quality items at affordable prices for students and staff." }}</p>
+                <h3><i class="fas fa-store"></i> About {% if site_settings %}{{ site_settings.site_name }}{% else %}AfrikanBikers{% endif %}</h3>
+                <p>{{ site_settings.about_text|default:"Your one-stop shop for all products. We offer quality items at affordable prices for bikers and staff." }}</p>
                 <!-- <div class="social-links">
 
                     {% if site_settings.facebook %}
@@ -1466,16 +1466,16 @@
             <div class="footer-section">
                 <h3><i class="fas fa-address-card"></i> Contact Info</h3>
                 <ul>
-                    <li><i class="fas fa-map-marker-alt"></i> {{ site_settings.contact_address|default:"Mama Ngina University" }}</li>
+                    <li><i class="fas fa-map-marker-alt"></i> {{ site_settings.contact_address|default:"Kenyatta University" }}</li>
                     <li><i class="fas fa-phone-alt"></i> {{ site_settings.contact_phone|default:"+2547 4387 4690" }}</li>
-                    <li><i class="fas fa-envelope"></i> {{ site_settings.contact_email|default:"info@unimart.ac.ke" }}</li>
+                    <li><i class="fas fa-envelope"></i> {{ site_settings.contact_email|default:"info@afrikanbikers.com" }}</li>
                     <li><i class="fas fa-clock"></i> {{ site_settings.business_hours|default:"Mon-Fri: 8am - 6pm" }}</li>
                 </ul>
             </div>
         </div>
         
         <div class="footer-bottom">
-            <p>&copy; {% now "Y" %} {% if site_settings %}{{ site_settings.site_name }}{% else %}UniMart{% endif %}. All rights reserved. | Designed with <i class="fas fa-heart"></i> for comrades</p>
+            <p>&copy; {% now "Y" %} {% if site_settings %}{{ site_settings.site_name }}{% else %}AfrikanBikers  {% endif %}. All rights reserved. | Designed with <i class="fas fa-heart"></i> for bikers</p>
             <p>Maintained by <a href="{{ site_settings.maintainer_url|default:'https://okalmjohn.netlify.app' }}" target="_blank">{{ site_settings.maintainer_name|default:'Jean Marie' }}</a></p>
         </div>
     </footer>

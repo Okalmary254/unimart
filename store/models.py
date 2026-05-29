@@ -1,3 +1,4 @@
+# store/models.py
 from django.db import models
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -15,7 +16,7 @@ class SomeModel(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
     phone = models.CharField(max_length=15, blank=True)
-    student_id = models.CharField(max_length=50, blank=True, null=True, unique=True)
+    biker_id = models.CharField(max_length=50, blank=True, null=True, unique=True)
     date_of_birth = models.DateField(null=True, blank=True)
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
     
@@ -208,7 +209,7 @@ class SiteSettings(models.Model):
     about_text = models.TextField(blank=True, help_text="About section text")
     contact_email = models.EmailField(default="info@mnustore.ac.ke")
     contact_phone = models.CharField(max_length=20, default="+2547 4387 4690")
-    contact_address = models.CharField(max_length=255, default="Mama Ngina University")
+    contact_address = models.CharField(max_length=255, default="Kenyatta University")
     business_hours = models.CharField(max_length=100, default="Mon-Fri: 8am - 6pm")
     
     # Social media links

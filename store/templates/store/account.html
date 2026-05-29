@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Account - UniMart</title>
+    <title>My Account - AfrikanBikers</title>
     <!-- Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -1266,7 +1266,7 @@
 
                         <div class="form-group">
                             <i class="fas fa-id-card"></i>
-                            <input type="text" class="form-control" placeholder="Student ID" name="student_id" required>
+                            <input type="text" class="form-control" placeholder="Biker ID" name="biker_id" required>
                         </div>
 
                         <div class="form-group">
@@ -1395,8 +1395,8 @@
                                 <div class="info-value">{{ user.profile.phone|default:"Not provided" }}</div>
                             </div>
                             <div class="info-item">
-                                <div class="info-label"><i class="fas fa-id-card"></i> Student ID</div>
-                                <div class="info-value">{{ user.profile.student_id|default:"Not provided" }}</div>
+                                <div class="info-label"><i class="fas fa-id-card"></i> Biker ID</div>
+                                <div class="info-value">{{ user.profile.biker_id|default:"Not provided" }}</div>
                             </div>
                             <div class="info-item">
                                 <div class="info-label"><i class="fas fa-calendar"></i> Member Since</div>
@@ -1477,8 +1477,8 @@
                                     <input type="tel" class="form-control" name="phone" value="{{ user.profile.phone }}" style="padding-left: 1rem;">
                                 </div>
                                 <div class="form-group">
-                                    <label>Student ID</label>
-                                    <input type="text" class="form-control" name="student_id" value="{{ user.profile.student_id }}" style="padding-left: 1rem;" readonly>
+                                    <label>Biker ID</label>
+                                    <input type="text" class="form-control" name="biker_id" value="{{ user.profile.biker_id }}" style="padding-left: 1rem;" readonly>
                                 </div>
                                 <div class="form-group">
                                     <label>Date of Birth</label>
@@ -1668,7 +1668,7 @@
                                         </label>
                                         <label style="display: flex; align-items: center; gap: 0.5rem; color: #666;">
                                             <input type="checkbox" name="public_profile" {% if user.profile.public_profile %}checked{% endif %}> 
-                                            Show my profile to other students
+                                            Show my profile to other bikers
                                         </label>
                                     </div>
                                 </div>
@@ -1697,8 +1697,8 @@
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-section">
-                <h3><i class="fas fa-store"></i> About UniMart</h3>
-                <p>Your one-stop shop for all products. We offer quality items at affordable prices for students and staff.</p>
+                <h3><i class="fas fa-store"></i> About AfrikanBikers</h3>
+                <p>Your one-stop shop for all products. We offer quality items at affordable prices for bikers and staff.</p>
                 <div class="social-links">
                     <a href="https://www.instagram.com/phil.anth.ropist"><i class="fab fa-instagram"></i></a>
                     <a href="https://x.com/jean__marie_"><i class="fab fa-twitter"></i></a>
@@ -1732,16 +1732,16 @@
             <div class="footer-section">
                 <h3><i class="fas fa-address-card"></i> Contact Info</h3>
                 <ul>
-                    <li><i class="fas fa-map-marker-alt"></i> Mama Ngina University</li>
+                    <li><i class="fas fa-map-marker-alt"></i> Kenyatta University</li>
                     <li><i class="fas fa-phone-alt"></i> +2547 4387 4690</li>
-                    <li><i class="fas fa-envelope"></i> info@lunimart.ac.ke</li>
+                    <li><i class="fas fa-envelope"></i> info@afrikanbikers.com</li>
                     <li><i class="fas fa-clock"></i> Mon-Fri: 8am - 6pm</li>
                 </ul>
             </div>
         </div>
         
         <div class="footer-bottom">
-            <p>&copy; 2026 UniMart. All rights reserved. | Designed with <i class="fas fa-heart"></i> for comrades</p>
+            <p>&copy; 2026 AfrikanBikers. All rights reserved. | Designed with <i class="fas fa-heart"></i> for bikers</p>
             <p>Maintained by <a href="https://okalmjohn.netlify.app">Jean Marie</a>
         
             </p>

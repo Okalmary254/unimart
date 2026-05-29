@@ -6,8 +6,8 @@ from .models import (
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ['user', 'student_id', 'phone', 'created_at']
-    search_fields = ['user__username', 'user__email', 'student_id']
+    list_display = ['user', 'biker_id', 'phone', 'created_at']
+    search_fields = ['user__username', 'user__email', 'biker_id']
     list_filter = ['created_at']
 
 @admin.register(Category)

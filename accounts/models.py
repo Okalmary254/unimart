@@ -4,13 +4,13 @@ from django.contrib.auth.decorators import user_passes_test
 
 class User(AbstractUser):
     ROLE_CHOICES = (
-        ('student', 'Student'),
+        ('biker', 'Biker'),
         ('staff', 'Staff'),
         ('admin', 'Admin'),
         ('store_manager', 'Store Manager'),
     )
 
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='student')
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='biker')
 
 def is_store_manager(user):
     return user.role == "store_manager"

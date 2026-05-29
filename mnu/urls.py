@@ -1,3 +1,4 @@
+# mnu/urls.py
 from django.contrib import admin
 from django.urls import include, path
 from django.conf.urls.static import static
@@ -8,6 +9,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     
     # Apps with their own URL configs
+    path('api/', include('store.api_urls')),  # API endpoints
     path('', include('store.urls')),  # Store URLs at root level
     path('accounts/', include('accounts.urls')),
     path('orders/', include('orders.urls')),

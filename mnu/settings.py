@@ -13,23 +13,29 @@ AUTH_USER_MODEL = os.getenv('AUTH_USER_MODEL', 'accounts.User')
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-DEBUG = os.getenv('DEBUG', 'False') == 'True'
+# DEBUG = os.getenv('DEBUG', 'False') == 'True'
+DEBUG = True
 
 CSRF_TRUSTED_ORIGINS = [
     'https://31ab-197-138-81-100.ngrok-free.app',
+    "https://dca6-217-199-144-117.ngrok-free.app",
     'http://localhost:8501',  
     'http://127.0.0.1:8501',
-    # '*',
+    'https://localhost:5173',
+    'https://127.0.0.1:5173',
+    'https://localhost:5174',
+    'https://127.0.0.1:5174',
+     #'*',
     #'ngrok.io',
 ]
 
-ALLOWED_HOSTS = [
-    'localhost',
-    '127.0.0.1',
-    '31ab-197-138-81-100.ngrok-free.app',
-    '.ngrok-free.app',  
-]
-
+# ALLOWED_HOSTS = [
+#     'localhost',
+#     '127.0.0.1',
+#     '31ab-197-138-81-100.ngrok-free.app',
+#     '.ngrok-free.app',  
+# ]
+ALLOWED_HOSTS = ['*']
 # ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
 INSTALLED_APPS = [
@@ -46,18 +52,49 @@ INSTALLED_APPS = [
     'dashboard',
     'accounts',
     'social_django',
-    'mpesa'
+    'mpesa',
+    'rest_framework_simplejwt.token_blacklist',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+#DRF Configuration
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 12,
+}
+
+# JWT Configuration
+from datetime import timedelta
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': True,
+}
+
+#CORS Configuration
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:5174',  # Vite dev server
+    'http://127.0.0.1:5174',
+
+]
+CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = 'mnu.urls'
 
@@ -170,6 +207,12 @@ SECURE_HSTS_SECONDS = int(os.getenv('SECURE_HSTS_SECONDS', '0'))
 SECURE_HSTS_INCLUDE_SUBDOMAINS = os.getenv('SECURE_HSTS_INCLUDE_SUBDOMAINS', 'False') == 'True'
 SECURE_HSTS_PRELOAD = os.getenv('SECURE_HSTS_PRELOAD', 'False') == 'True'
 
+SESSION_COOKIE_SAMESITE = "None"
+SESSION_COOKIE_SECURE = True
+
+CSRF_COOKIE_SAMESITE = "None"
+CSRF_COOKIE_SECURE = True
+
 if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
@@ -178,10 +221,10 @@ if not DEBUG:
 # CSRF_FAILURE_VIEW = os.getenv('CSRF_FAILURE_VIEW', 'store.views.csrf_failure')
 
 # Site Settings
-SITE_NAME = os.getenv('SITE_NAME', 'UniMart')
+SITE_NAME = os.getenv('SITE_NAME', 'AfrikanBikers')
 SITE_URL = os.getenv('SITE_URL', 'http://127.0.0.1:8000')
-ADMIN_EMAIL = os.getenv('ADMIN_EMAIL', 'admin@unimart.ac.ke')
-SUPPORT_EMAIL = os.getenv('SUPPORT_EMAIL', 'support@unimart.ac.ke')
+ADMIN_EMAIL = os.getenv('ADMIN_EMAIL', 'admin@afrikanbikers.com')
+SUPPORT_EMAIL = os.getenv('SUPPORT_EMAIL', 'support@afrikanbikers.com')
 
 # Payment Settings
 CURRENCY = os.getenv('CURRENCY', 'KES')

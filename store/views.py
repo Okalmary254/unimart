@@ -1,3 +1,4 @@
+# store/views.py
 from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -227,9 +228,9 @@ def about(request):
     context = {
         'team_members': [
             {'name': 'John Mary', 'position': 'Founder & CEO', 'bio': 'Plumber (Data Engineer)', 'image': 'team/john.jpg'},
-            {'name': 'Adero David', 'position': 'Operations Manager', 'bio': 'Business student', 'image': 'team/sarah.jpg'},
-            {'name': 'Sam Maina', 'position': 'Tech Lead', 'bio': 'Software Engineering student', 'image': 'team/david.jpg'},
-            {'name': 'Odero Anold', 'position': 'Customer Relations', 'bio': 'Marketing student', 'image': 'team/grace.jpg'},
+            {'name': 'Adero David', 'position': 'Operations Manager', 'bio': 'Business biker', 'image': 'team/sarah.jpg'},
+            {'name': 'Sam Maina', 'position': 'Tech Lead', 'bio': 'Software Engineering biker', 'image': 'team/david.jpg'},
+            {'name': 'Odero Anold', 'position': 'Customer Relations', 'bio': 'Marketing biker', 'image': 'team/grace.jpg'},
         ]
     }
     return render(request, 'store/about.html', context)
@@ -256,7 +257,7 @@ def contact(request):
     settings = SiteSettings.objects.first()
     context = {
         'contact_info': {
-            'address': settings.contact_address if settings else 'Mama Ngina University',
+            'address': settings.contact_address if settings else 'Kenyatta University',
             'phone': settings.contact_phone if settings else '+2547 4387 4690',
             'email': settings.contact_email if settings else 'info@mnustore.ac.ke',
             'hours': settings.business_hours if settings else 'Mon-Fri: 8am - 6pm',
@@ -1272,7 +1273,7 @@ def common_context(request):
     return {
         'categories': categories,
         'contact_info': {
-            'address': settings.contact_address if settings else 'Mama Ngina University',
+            'address': settings.contact_address if settings else 'Kenyatta University',
             'phone': settings.contact_phone if settings else '+2547 4387 4690',
             'email': settings.contact_email if settings else 'info@mnustore.ac.ke',
             'hours': settings.business_hours if settings else 'Mon-Fri: 8am - 6pm',
