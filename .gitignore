@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 
 *.so
+
 .Python
 build/
 develop-eggs/
@@ -107,8 +108,6 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-.env.production
-
 
 # Spyder project settings
 .spyderproject
